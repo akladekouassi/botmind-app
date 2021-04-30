@@ -34,9 +34,6 @@
     "format": "nx format:write",
     "format:write": "nx format:write",
     "format:check": "nx format:check",
-    "format:all": "prettier --write \"src/**/*.+(js|jsx|md|ts|tsx|css|sass|less|graphql|yml|yaml|scss|json|vue)\"",
-    "------ALL-CMSs-RELATIVES-TO-COMMITS------": "",
-    "commit": "git-cz",
     "------OTHERS-CMSs--------": "",
     "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
     "nx": "nx",
@@ -76,7 +73,6 @@
     "@types/node": "14.14.33",
     "codelyzer": "^6.0.0",
     "cypress": "^6.0.1",
-    "cz-conventional-changelog": "3.3.0",
     "dotenv": "8.2.0",
     "jest": "26.2.2",
     "jest-preset-angular": "8.3.2",
@@ -85,21 +81,5 @@
     "ts-node": "~9.1.1",
     "tslint": "~6.1.0",
     "typescript": "~4.1.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "./apps/*.{js,jsx,ts,tsx}": [
-      "npx prettier --write",
-      "eslint apps/*.tsx --fix-dry-run"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }

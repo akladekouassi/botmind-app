@@ -3,21 +3,19 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "------GENERATE-ENVIRONMENT-FILES-CMDs------": "",
+    "ng": "nx",
     "config:generate:envFiles": "ts-node ./scripts/setenv.ts",
     "------RUN-FRONT-BACK-TOGATHER-CMDs------": "",
     "dev": "concurrently \"yarn start:api\" \"yarn start:front\"",
-    "------ALL-FRONTEND-RELATIVES-CMDs------": "",
-    "start:front": "npm run config:generate:envFiles -- --environment=dev && ng serve",
-    "build:frontend": "npm run config:generate:envFiles -- --environment=prod && ng build",
-    "------ALL-BACKEND-RELATIVES-CMDs------": "",
-    "start:api": "npm run config:generate:envFiles -- --environment=dev && nx serve backend",
-    "build:backend": "npm run config:generate:envFiles -- --environment=prod && nx build backend --configuration=production",
-    "------ALL-TEST-AND-LINTNG-RELATIVES-CMDs------": "",
+    "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
+    "nx": "nx",
+    "start:front": "npm run config -- --environment=dev ng serve",
+    "start:api": "npm run config -- --environment=dev nx serve backend",
+    "build:frontend": "npm run config -- --environment=prod ng build",
+    "build:backend": "npm run config -- --environment=prod nx build backend",
     "test": "ng test",
     "lint": "nx workspace-lint && ng lint",
     "e2e": "ng e2e",
-    "------ALL-CMSs-RELATIVES-TO-NX------": "",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",
     "affected:build": "nx affected:build",
@@ -26,21 +24,13 @@
     "affected:lint": "nx affected:lint",
     "affected:dep-graph": "nx affected:dep-graph",
     "affected": "nx affected",
-    "update": "nx migrate latest",
-    "workspace-generator": "nx workspace-generator",
-    "dep-graph": "nx dep-graph",
-    "help": "nx help",
-    "------ALL-CMSs-RELATIVES-TO-FORMATING------": "",
     "format": "nx format:write",
     "format:write": "nx format:write",
     "format:check": "nx format:check",
-    "format:all": "prettier --write \"src/**/*.+(js|jsx|md|ts|tsx|css|sass|less|graphql|yml|yaml|scss|json|vue)\"",
-    "------ALL-CMSs-RELATIVES-TO-COMMITS------": "",
-    "commit": "git-cz",
-    "------OTHERS-CMSs--------": "",
-    "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
-    "nx": "nx",
-    "ng": "nx"
+    "update": "nx migrate latest",
+    "workspace-generator": "nx workspace-generator",
+    "dep-graph": "nx dep-graph",
+    "help": "nx help"
   },
   "private": true,
   "dependencies": {
@@ -76,7 +66,6 @@
     "@types/node": "14.14.33",
     "codelyzer": "^6.0.0",
     "cypress": "^6.0.1",
-    "cz-conventional-changelog": "3.3.0",
     "dotenv": "8.2.0",
     "jest": "26.2.2",
     "jest-preset-angular": "8.3.2",
@@ -85,21 +74,5 @@
     "ts-node": "~9.1.1",
     "tslint": "~6.1.0",
     "typescript": "~4.1.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "./apps/*.{js,jsx,ts,tsx}": [
-      "npx prettier --write",
-      "eslint apps/*.tsx --fix-dry-run"
-    ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }

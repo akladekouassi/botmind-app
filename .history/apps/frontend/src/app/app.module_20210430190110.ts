@@ -15,7 +15,7 @@ import { AuthModule, authRoutes } from '@botmind-app/auth';
       initialNavigation: 'enabled',
     }),
     AuthModule,
-  ],
+  ], // added],
   providers: [],
   bootstrap: [AppComponent],
 })

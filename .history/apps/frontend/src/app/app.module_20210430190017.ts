@@ -8,14 +8,14 @@ import { AuthComponent } from './containers/auth/auth.component';
 // import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
 import { AuthModule, authRoutes } from '@botmind-app/auth';
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, AuthComponent],
   imports: [
     BrowserModule,
     RouterModule.forRoot([{ path: 'auth', children: authRoutes }], {
       initialNavigation: 'enabled',
     }),
     AuthModule,
-  ],
+  ], // added],
   providers: [],
   bootstrap: [AppComponent],
 })
