@@ -6,7 +6,15 @@ require('dotenv').config();
 const environment = argv.environment;
 const isProduction = environment === 'prod';
 
-if (!process.env.LOCAL_API_URL) {
+if (
+  !process.env.LOCAL_API_URL ||
+  !process.env.PORT ||
+  !process.env.MONGODB_USER_PASS ||
+  !process.env.MONGODB_URL ||
+  !process.env.MONGODB_NAME ||
+  !process.env.MONGODB_AUTH_SOURCE ||
+  !process.env.MONGODB_AUTH_MECHANISME
+) {
   console.error('All the required environment variables were not provided!');
   process.exit(-1);
 }
@@ -23,20 +31,32 @@ const targetBackendPath = isProduction
 const frontEnvironmentFileContent = `
 export const environment = {
    production: ${isProduction},
-   LOCAL_API_URL: "${process.env.LOCAL_API_URL}",
+   LOCAL_API_URL: "${process.env.LOCAL_API_URL}:${process.env.PORT}",
+   PORT:"${process.env.PORT}",
+   MONGODB_USER_PASS:"${process.env.MONGODB_USER_PASS}",
+   MONGODB_URL:"${process.env.MONGODB_URL}",
+   MONGODB_NAME: "${process.env.MONGODB_NAME}",
+   MONGODB_AUTH_SOURCE:"${process.env.MONGODB_AUTH_SOURCE} ",
+  MONGODB_AUTH_MECHANISME:"${process.env.MONGODB_AUTH_MECHANISME}"
 };
 `;
 
 const backEnvironmentFileContent = `
 export const environment = {
    production: ${isProduction},
-   LOCAL_API_URL: "${process.env.LOCAL_API_URL}",
+   LOCAL_API_URL: "${process.env.LOCAL_API_URL}:${process.env.PORT}",
+   PORT:"${process.env.PORT}",
+   MONGODB_USER_PASS:"${process.env.MONGODB_USER_PASS}",
+   MONGODB_URL:"${process.env.MONGODB_URL}",
+   MONGODB_NAME: "${process.env.MONGODB_NAME}",
+   MONGODB_AUTH_SOURCE:"${process.env.MONGODB_AUTH_SOURCE} ",
+   MONGODB_AUTH_MECHANISME:"${process.env.MONGODB_AUTH_MECHANISME}"
 };
 `;
 
 // write the content to the respective file
 const generateFrontEnv = () =>
-  writeFile(targetFrontendPath, frontEnvironmentFileContent, (err) => {
+  writeFile(targetFrontendPath, frontEnvironmentFileContent, err => {
     if (err) {
       console.log(err);
     }
@@ -44,7 +64,7 @@ const generateFrontEnv = () =>
   });
 
 const generateBackendEnv = () =>
-  writeFile(targetBackendPath, backEnvironmentFileContent, (err) => {
+  writeFile(targetBackendPath, backEnvironmentFileContent, err => {
     if (err) {
       console.log(err);
     }

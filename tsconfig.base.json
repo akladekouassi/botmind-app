@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@botmind-app/auth": ["libs/auth/src/index.ts"]
+      "@botmind-app/appBase": ["libs/appBase/src/index.ts"],
+      "@botmind-app/material": ["libs/material/src/index.ts"],
+      "@botmind-app/database-logics": ["libs/database-logics/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
