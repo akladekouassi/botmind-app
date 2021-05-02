@@ -1,8 +1,5 @@
 {
-  "implicitDependencies": {
-    "package.json": { "dependencies": "*", "devDependencies": "*" },
-    ".eslintrc.json": "*"
-  },
+  "implicitDependencies": { "package.json": { "dependencies": "*", "devDependencies": "*" }, ".eslintrc.json": "*" },
   "affected": { "defaultBase": "master" },
   "npmScope": "botmind-app",
   "tasksRunnerOptions": {
@@ -15,6 +12,8 @@
     "frontend": { "tags": [] },
     "frontend-e2e": { "tags": [], "implicitDependencies": ["frontend"] },
     "backend": { "tags": [] },
-    "auth": { "tags": [] }
+    "auth": { "tags": [] },
+    "material": { "tags": [] },
+    "database-logics": { "tags": [] }
   }
 }

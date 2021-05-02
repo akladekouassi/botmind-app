@@ -70,11 +70,11 @@
             "polyfills": "apps/frontend/src/polyfills.ts",
             "tsConfig": "apps/frontend/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/frontend/src/favicon.ico",
-              "apps/frontend/src/assets"
+            "assets": ["apps/frontend/src/favicon.ico", "apps/frontend/src/assets"],
+            "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "apps/frontend/src/styles.scss"
             ],
-            "styles": ["apps/frontend/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -210,10 +210,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/backend/tsconfig.app.json",
-              "apps/backend/tsconfig.spec.json"
-            ],
+            "tsConfig": ["apps/backend/tsconfig.app.json", "apps/backend/tsconfig.spec.json"],
             "exclude": ["**/node_modules/**", "!apps/backend/**/*"]
           }
         },
@@ -236,10 +233,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/auth/tsconfig.lib.json",
-              "libs/auth/tsconfig.spec.json"
-            ],
+            "tsConfig": ["libs/auth/tsconfig.lib.json", "libs/auth/tsconfig.spec.json"],
             "exclude": ["**/node_modules/**", "!libs/auth/**/*"]
           }
         },
@@ -248,6 +242,52 @@
           "outputs": ["coverage/libs/auth"],
           "options": {
             "jestConfig": "libs/auth/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "material": {
+      "projectType": "library",
+      "root": "libs/material",
+      "sourceRoot": "libs/material/src",
+      "prefix": "botmind-app",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/material/tsconfig.lib.json", "libs/material/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/material/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/material"],
+          "options": {
+            "jestConfig": "libs/material/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "database-logics": {
+      "projectType": "library",
+      "root": "libs/database-logics",
+      "sourceRoot": "libs/database-logics/src",
+      "prefix": "botmind-app",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/database-logics/tsconfig.lib.json", "libs/database-logics/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/database-logics/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/database-logics"],
+          "options": {
+            "jestConfig": "libs/database-logics/jest.config.js",
             "passWithNoTests": true
           }
         }
