@@ -5,8 +5,6 @@ export enum DefaultPrivacyLevel {
 }
 
 export interface User {
-  id: string;
-  uuid: string;
   firstName: string;
   lastName: string;
   username: string;

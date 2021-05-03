@@ -12,8 +12,6 @@ const { Schema, model } = mongoose;
 const { isEmail } = require('validator');
 import { User, DbSchema } from '../../../data-models/index';
 
-export const removeUserFromResults = (userId: User['id'], results: User[]) => remove({ id: userId }, results);
-
 // USERS LOGICS
 const userSchema: any = new Schema(
   {
@@ -66,13 +64,6 @@ const userSchema: any = new Schema(
       maxLength: 35,
       unique: false,
     },
-    uuid: {
-      type: String || Number,
-      required: true,
-      minLength: 8,
-      maxLength: 200,
-      unique: false,
-    },
   },
   {
     timestamps: true,
@@ -99,26 +90,22 @@ export const authenticateUser = (username: string, password: string, done: Funct
 };
 
 export const getUSerProfile = (req: any, res: any) => {
-  userModel
-    .findOne({ _id: req.decoded.userId })
-    .select('username email')
-    .exec((err, user) => {
-      if (err) {
-        res.json({ success: false, message: err });
+  userModel.findOne({ _id: req.decoded.userId }).exec((err, user) => {
+    if (err) {
+      res.json({ success: false, message: err });
+    } else {
+      if (!user) {
+        res.json({ success: false, message: 'User not found' });
       } else {
-        if (!user) {
-          res.json({ success: false, message: 'User not found' });
-        } else {
-          res.json({ success: true, user: user });
-        }
+        res.json({ success: true, user: user });
       }
-    });
+    }
+  });
 };
 
-export const createUser = async (userDetails: Partial<User>, res: any): Promise<any> => {
+export const createUser = async (userDetails: Partial<User>, res: any, req: any): Promise<any> => {
   const password = bcrypt.hashSync(userDetails.password!, 10);
   const user: Partial<User> = {
-    uuid: v4(),
     firstName: userDetails.firstName!,
     lastName: userDetails.lastName!,
     username: userDetails.username!,
@@ -129,27 +116,83 @@ export const createUser = async (userDetails: Partial<User>, res: any): Promise<
     modifiedAt: new Date(),
   };
 
-  return saveUser(user, res);
+  return saveUser(user, res, req, 'addNew');
+};
+
+export const updateUserProfile = async (
+  userDetails: Partial<User>,
+  res: any,
+  userAuthenticated: any,
+  userID: string
+): Promise<any> => {
+  const password = bcrypt.hashSync(userDetails.password!, 10);
+  const user: Partial<User> = {
+    firstName: userDetails.firstName!,
+    lastName: userDetails.lastName!,
+    username: userDetails.username!,
+    password,
+    email: userDetails.email!,
+    phoneNumber: userDetails.phoneNumber!,
+    modifiedAt: new Date(),
+  };
+
+  return saveUser(user, res, 'update', userAuthenticated, userID);
 };
 
 const saveUser = async (
-  { username, password, email, firstName, lastName, phoneNumber, uuid }: Partial<User>,
-  res: any
+  { username, password, email, firstName, lastName, phoneNumber, modifiedAt }: Partial<User>,
+  res: any,
+  queryType: 'addNew' | 'update',
+  req: any,
+  userID?: string
 ) => {
   try {
-    const userRegistered = await userModel.create({
-      username,
-      email,
-      password,
-      firstName,
-      lastName,
-
-      phoneNumber,
-      uuid,
-    });
-    res.status(201).json({ userId: userRegistered._id });
+    if (queryType === 'addNew') {
+      const userRegistered = await userModel.create({
+        username,
+        email,
+        password,
+        firstName,
+        lastName,
+        phoneNumber,
+      });
+      res.status(201).json({ userId: userRegistered._id });
+    } else {
+      userModel.findOne({ _id: userID! }, (err, user) => {
+        if (err) {
+          res.json({ success: false, message: 'Error fonded' + err });
+        } else {
+          if (!user) {
+            res.json({ success: false, message: 'Unable to authenticate user.' });
+          } else {
+            if (parseInt(user._id) !== parseInt(req.user._id)) {
+              res.json({ success: false, message: 'You are not authorized to edit this user' });
+            } else {
+              user.lastName = lastName;
+              user.firstName = firstName;
+              user.email = email;
+              user.phoneNumber = phoneNumber;
+              user.username = username;
+              user.password = password;
+              user.modifiedAt = modifiedAt;
+              user.save(err => {
+                if (err) {
+                  if (err.errors) {
+                    res.json({ success: false, message: 'Please ensure form is filled out properly' });
+                  } else {
+                    res.json({ success: false, message: 'Error fonded' + err });
+                  }
+                } else {
+                  res.json({ success: true, message: 'User Updated!' });
+                }
+              });
+            }
+          }
+        }
+      });
+    }
   } catch (error) {
-    res.status(200).send({ error });
+    res.status(400).send({ error });
   }
 };
 
@@ -185,16 +228,7 @@ export const getAllBlogs = (res: any) => {
   }).sort({ _id: -1 });
 };
 
-// bloggg 608ec6925f6e3bd30e6f85c1
-
-//user  608e91530b673f96c1b9640d
-
-//   608e91530b673f96c1b9640d
-
-// 608e91530b673f96c1b9640d
-
 export const getBlogByID = (id: string, req: any, res: any) => {
-  console.log('USERID::', req.user);
   if (!id) {
     res.json({ success: false, message: 'No blog ID was provided.' });
   } else {
