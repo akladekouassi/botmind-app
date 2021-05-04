@@ -1,0 +1,36 @@
+<div class="container">
+    <mat-card>
+        <mat-card-title>CONNEXIONQ</mat-card-title>
+        <mat-card-content>
+            <form [formGroup]="form" (submit)="onLoginSubmit()" fxLayout="column" fxLayoutAlign="center none">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Identifiant</mat-label>
+                    <input type="text" matInput name="username" class="form-control" autocomplete="off" placeholder="*Username" formControlName="username" />
+                    <mat-error>
+                        <ul>
+                            <li *ngIf="form.controls.username.errors?.required || form.controls.username.dirty">
+                                L'identifiant est obligatoire
+                            </li>
+                        </ul>
+                    </mat-error>
+                </mat-form-field>
+                <!-- Password Input -->
+                <mat-form-field class="example-full-width">
+                    <mat-label>Mot de passe</mat-label>
+                    <input matInput type="password" name="password" autocomplete="off" placeholder="***********" formControlName="password" />
+                    <mat-error>
+                        <ul>
+                            <li *ngIf="form.controls.password.errors?.required && form.controls.password.dirty">
+                                Le mot de passe est obligatoire
+                            </li>
+                        </ul>
+                    </mat-error>
+                </mat-form-field>
+                <!-- Validation -->
+                <button mat-raised-button [disabled]="!form.valid || processing" (submit)="onLoginSubmit()" type="submit" class="btn btn-primary">
+          Valider
+        </button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -17,7 +17,11 @@
     "paths": {
       "@botmind-app/appBase": ["libs/appBase/src/index.ts"],
       "@botmind-app/material": ["libs/material/src/index.ts"],
-      "@botmind-app/database-logics": ["libs/database-logics/src/index.ts"]
+      "@botmind-app/database-logics": ["libs/database-logics/src/index.ts"],
+      "@botmind-app/service/auth": ["libs/service/auth/src/index.ts"],
+      "@botmind-app/blogs": ["libs/blogs/src/index.ts"],
+      "@botmind-app/authentication": ["libs/authentication/src/index.ts"],
+      "@botmind-app/layout": ["libs/layout/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

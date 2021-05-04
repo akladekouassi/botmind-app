@@ -73,7 +73,8 @@
             "assets": ["apps/frontend/src/favicon.ico", "apps/frontend/src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "apps/frontend/src/styles.scss"
+              "apps/frontend/src/styles.scss",
+              "./node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },
@@ -288,6 +289,98 @@
           "outputs": ["coverage/libs/database-logics"],
           "options": {
             "jestConfig": "libs/database-logics/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "service-auth": {
+      "projectType": "library",
+      "root": "libs/service/auth",
+      "sourceRoot": "libs/service/auth/src",
+      "prefix": "botmind-app",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/service/auth/tsconfig.lib.json", "libs/service/auth/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/service/auth/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/service/auth"],
+          "options": {
+            "jestConfig": "libs/service/auth/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "blogs": {
+      "projectType": "library",
+      "root": "libs/blogs",
+      "sourceRoot": "libs/blogs/src",
+      "prefix": "botmind-app",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/blogs/tsconfig.lib.json", "libs/blogs/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/blogs/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/blogs"],
+          "options": {
+            "jestConfig": "libs/blogs/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "authentication": {
+      "projectType": "library",
+      "root": "libs/authentication",
+      "sourceRoot": "libs/authentication/src",
+      "prefix": "botmind-app",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/authentication/tsconfig.lib.json", "libs/authentication/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/authentication/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/authentication"],
+          "options": {
+            "jestConfig": "libs/authentication/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "layout": {
+      "projectType": "library",
+      "root": "libs/layout",
+      "sourceRoot": "libs/layout/src",
+      "prefix": "botmind-app",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/layout/tsconfig.lib.json", "libs/layout/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/layout/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/layout"],
+          "options": {
+            "jestConfig": "libs/layout/jest.config.js",
             "passWithNoTests": true
           }
         }

@@ -33,7 +33,7 @@ router.post('/login', passport.authenticate('local'), (req: any, res: any): void
     req.session!.cookie.expires = false;
   }
 
-  res.send({ user: req.user });
+  res.send({ success: true, message: 'Connected successfully', user: req.user });
 });
 
 // router.post('/login', (req, res, next) => {
@@ -60,7 +60,7 @@ router.post('/logout', (req: express.Request, res: express.Response) => {
   req.logout();
   req.session!.destroy(function (err) {
     //   res.redirect('/');
-    return res.json({ message: 'loggedOut succesfully' });
+    return res.json({ success: true, message: 'loggedOut succesfully' });
   });
 });
 

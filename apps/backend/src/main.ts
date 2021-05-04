@@ -16,7 +16,8 @@ require('dotenv').config();
 require('../src/app/helpers/dbConnexion');
 
 const corsOption = {
-  origin: 'http://localhost:4200',
+  origin: '*',
+  'Access-Control-Allow-Origin': '*',
   credentials: true,
 };
 
