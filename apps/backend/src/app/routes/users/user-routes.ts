@@ -1,6 +1,12 @@
 import * as express from 'express';
 import { isEqual, pick } from 'lodash/fp';
-import { createUser, getProfile, updateUserProfile } from '../../../../../../libs/database-logics/src/index';
+import {
+  createUser,
+  getProfile,
+  updateUserProfile,
+  checkUsername,
+  checkEmail,
+} from '../../../../../../libs/database-logics/src/index';
 import { User } from '../../../../../../libs/data-models/index';
 import { ensureAuthenticated, validateMiddleware, userFieldsValidator, isUserValidator } from '../../helpers/index';
 
@@ -15,6 +21,22 @@ router.post('/register', userFieldsValidator, validateMiddleware(isUserValidator
 
 router.get('/profile', ensureAuthenticated, (req, res) => {
   const user = getProfile(req, res);
+  return user;
+});
+
+/* ============================================================
+     Route to check if user's email is available for registration
+  ============================================================ */
+router.get('/checkEmail/:email', (req, res) => {
+  const user = checkEmail(req.params.email, res);
+  return user;
+});
+
+/* ===============================================================
+     Route to check if user's username is available for registration
+  =============================================================== */
+router.get('/checkUsername/:username', (req, res) => {
+  const user = checkUsername(req.params.username, res);
   return user;
 });
 

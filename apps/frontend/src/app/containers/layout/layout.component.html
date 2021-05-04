@@ -1,0 +1,29 @@
+<mat-toolbar color="primary" fxLayout="row">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+    <span>BOTMIND BLOG</span>
+    <span class="example-spacer"></span>
+
+    <section>
+        <div>
+            <button *ngIf="authService.loggedIn()" mat-button class="mat-select-arrow-wrapper" ejs-dropdownbutton [matMenuTriggerFor]="menu">
+        {{ this.authService.loggedIn()?.firstName }} {{ this.authService.loggedIn()?.lastName }}
+        <mat-icon>arrow-down</mat-icon>
+      </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item>Ajouter un blog</button>
+                <button mat-menu-item>Editer mon profil</button>
+                <button mat-menu-item>Voire mes blogs</button>
+                <button (click)="onLogoutClick()" mat-menu-item>Deconnexion</button>
+            </mat-menu>
+            <button *ngIf="!authService.loggedIn()" routerLink="auth/login" routerLinkActive="active" mat-button>
+        Connexion
+      </button>
+            <button *ngIf="!authService.loggedIn()" routerLink="auth/register" routerLinkActive="active" mat-button>
+        Inscription
+      </button>
+        </div>
+    </section>
+</mat-toolbar>
+<ng-content></ng-content>

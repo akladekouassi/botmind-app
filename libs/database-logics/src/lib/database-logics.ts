@@ -78,9 +78,9 @@ export const authenticateUser = (username: string, password: string, done: Funct
       bcrypt.compare(password, user?.password, (err, isMatch) => {
         if (err) throw err;
         if (isMatch) {
-          return done(null, user);
+          return done(null, user, { success: true, message: 'login successfully', user });
         } else {
-          return done(null, false, { message: 'Wrong password' });
+          return done(null, false, { success: false, message: 'Wrong password' });
         }
       });
     })
@@ -103,6 +103,42 @@ export const getUSerProfile = (req: any, res: any) => {
   });
 };
 
+export const checkUsername = (username: string, res: any) => {
+  if (!username) {
+    res.json({ success: false, message: 'Username was not provided' }); // Return error
+  } else {
+    userModel.findOne({ username }, (err, user) => {
+      if (err) {
+        res.json({ success: false, message: err }); // Return connection error
+      } else {
+        if (user) {
+          res.json({ success: false, message: 'Username is already taken' }); // Return as taken username
+        } else {
+          res.json({ success: true, message: 'Username is available' }); // Return as vailable username
+        }
+      }
+    });
+  }
+};
+
+export const checkEmail = (email: string, res: any) => {
+  if (!email) {
+    res.json({ success: false, message: 'Email was not provided' }); // Return error
+  } else {
+    userModel.findOne({ email }, (err, user) => {
+      if (err) {
+        res.json({ success: false, message: err });
+      } else {
+        if (user) {
+          res.json({ success: false, message: 'Email is already taken' }); // Return as taken username
+        } else {
+          res.json({ success: true, message: 'Email is available' }); // Return as vailable username
+        }
+      }
+    });
+  }
+};
+
 export const createUser = async (userDetails: Partial<User>, res: any, req: any): Promise<any> => {
   const password = bcrypt.hashSync(userDetails.password!, 10);
   const user: Partial<User> = {
@@ -116,7 +152,7 @@ export const createUser = async (userDetails: Partial<User>, res: any, req: any)
     modifiedAt: new Date(),
   };
 
-  return saveUser(user, res, req, 'addNew');
+  return saveUser(user, res, 'addNew', req);
 };
 
 export const updateUserProfile = async (
@@ -156,7 +192,7 @@ const saveUser = async (
         lastName,
         phoneNumber,
       });
-      res.status(201).json({ userId: userRegistered._id });
+      res.status(201).json({ success: true, message: 'user created successfully', userId: userRegistered._id });
     } else {
       userModel.findOne({ _id: userID! }, (err, user) => {
         if (err) {

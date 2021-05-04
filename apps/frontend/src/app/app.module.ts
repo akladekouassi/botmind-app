@@ -2,29 +2,48 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-// import { NxModule } from '@nrwl/nx';
+import { HttpModule } from '@angular/http';
+import { ToastrModule } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Added
 import { MaterialModule } from '@botmind-app/material';
 import { AppComponent } from './app.component';
-import { AuthComponent } from './containers/auth/auth.component';
 import { RegistrationFormComponent } from './components/registration-form/registration-form.component';
-import { AppBaseRoutingModule } from '@botmind-app/appBase';
-import { HeaderComponent } from './components/header/header.component';
-import { LoginFormComponent } from './components/login-form/login-form.component';
-import { HomePageComponent } from './containers/home-page/home-page.component';
 import { ArticleCardComponent } from './components/article-card/article-card.component';
+import { AuthenticationModule, authenticationRoutes } from '@botmind-app/authentication';
+import { LayoutModule } from '@botmind-app/layout';
+import { LayoutComponent } from './containers/layout/layout.component';
+import { AuthGuard } from '@botmind-app/authentication';
+import { AuthService } from '@botmind-app/service/auth';
+
 @NgModule({
-  declarations: [AppComponent, HeaderComponent, RegistrationFormComponent, AuthComponent, LoginFormComponent, HomePageComponent, ArticleCardComponent],
+  declarations: [AppComponent, RegistrationFormComponent, ArticleCardComponent, LayoutComponent],
   imports: [
     BrowserModule,
     MaterialModule,
+    LayoutModule,
     BrowserAnimationsModule,
-    AppBaseRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    AuthenticationModule,
+    RouterModule.forRoot(
+      [
+        { path: '', pathMatch: 'full', redirectTo: 'auth/login' },
+        { path: 'auth', children: authenticationRoutes },
+        {
+          path: 'blogs',
+          loadChildren: () => import('@botmind-app/blogs').then(module => module.BlogsModule),
+          canActivate: [AuthGuard],
+        },
+        { path: '**', redirectTo: 'auth/login' },
+      ],
+      { initialNavigation: 'enabled' }
+    ),
+    HttpClientModule,
+    HttpModule,
+    ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [AuthGuard, AuthService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
