@@ -6,37 +6,37 @@ require('dotenv').config();
 const environment = argv.environment;
 const isProduction = environment === 'prod';
 
-if (
-  !process.env.LOCAL_API_URL ||
-  !process.env.MONGODB_USER_PASS ||
-  !process.env.MONGODB_URL ||
-  !process.env.MONGODB_NAME ||
-  !process.env.MONGODB_AUTH_SOURCE ||
-  !process.env.MONGODB_AUTH_MECHANISME ||
-  !process.env.PROD_API_URL ||
-  !process.env.LOGIN ||
-  !process.env.LOGOUT ||
-  !process.env.CHECKAUTH ||
-  !process.env.REGISTER_USER ||
-  !process.env.GET_USER_PROFILE ||
-  !process.env.UPDATE_USER_PROFILE ||
-  !process.env.ADD_NEW_BLOG ||
-  !process.env.GET_ALL_BLOGS ||
-  !process.env.GET_SINGLE_BLOG ||
-  !process.env.GET_BLOGS_FOR_USER ||
-  !process.env.UPDATE_BLOG ||
-  !process.env.DELETE_BLOG ||
-  !process.env.LIKE_A_BLOG ||
-  !process.env.DISLIKE_A_BLOG ||
-  !process.env.COMMENT_A_BLOG ||
-  !process.env.CHECK_EMAIL_API_URL ||
-  !process.env.CHECK_USERNAME_API_URL ||
-  !process.env.DELETE_USER_ACCOUNT_API_URL ||
-  !process.env.GET_ALL_USERS_API_URL
-) {
-  console.error('All the required environment variables were not provided!');
-  process.exit(-1);
-}
+// if (
+//   !process.env.LOCAL_API_URL ||
+//   !process.env.MONGODB_USER_PASS ||
+//   !process.env.MONGODB_URL ||
+//   !process.env.MONGODB_NAME ||
+//   !process.env.MONGODB_AUTH_SOURCE ||
+//   !process.env.MONGODB_AUTH_MECHANISME ||
+//   !process.env.PROD_API_URL ||
+//   !process.env.LOGIN ||
+//   !process.env.LOGOUT ||
+//   !process.env.CHECKAUTH ||
+//   !process.env.REGISTER_USER ||
+//   !process.env.GET_USER_PROFILE ||
+//   !process.env.UPDATE_USER_PROFILE ||
+//   !process.env.ADD_NEW_BLOG ||
+//   !process.env.GET_ALL_BLOGS ||
+//   !process.env.GET_SINGLE_BLOG ||
+//   !process.env.GET_BLOGS_FOR_USER ||
+//   !process.env.UPDATE_BLOG ||
+//   !process.env.DELETE_BLOG ||
+//   !process.env.LIKE_A_BLOG ||
+//   !process.env.DISLIKE_A_BLOG ||
+//   !process.env.COMMENT_A_BLOG ||
+//   !process.env.CHECK_EMAIL_API_URL ||
+//   !process.env.CHECK_USERNAME_API_URL ||
+//   !process.env.DELETE_USER_ACCOUNT_API_URL ||
+//   !process.env.GET_ALL_USERS_API_URL
+// ) {
+//   console.error('All the required environment variables were not provided!');
+//   process.exit(-1);
+// }
 
 const targetFrontendPath = isProduction
   ? `./apps/frontend/src/environments/environment.prod.ts`
