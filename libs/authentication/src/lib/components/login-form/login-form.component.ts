@@ -1,5 +1,5 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '@botmind-app/service/auth';
 import { Router } from '@angular/router';
@@ -54,21 +54,31 @@ export class LoginFormComponent implements OnInit {
       username: this.form.get('username').value,
       password: this.form.get('password').value,
     };
-
-    // Function to send login data to API
-    this.authService.login(user.username, user.password).subscribe(data => {
-      if (!data.user) {
-        this.toastr.error('Une erreur est arrivée', 'MESSAGE');
-        this.processing = false;
-        this.enableForm();
-      } else {
-        this.authService.storeUserData(data.user, data.token);
-        this.toastr.success('Connecté avec succes', 'MESSAGE');
+    this.authService.login(user.username, user.password).subscribe(
+      data => {
+        if (!data.success) {
+          this.form.reset();
+          this.toastr.error(data.msg, 'MESSAGE');
+          this.processing = false;
+          this.enableForm();
+        } else {
+          this.form.reset();
+          this.authService.storeUserData(data);
+          this.toastr.success(data.message, 'MESSAGE');
+          setTimeout(() => {
+            this.enableForm();
+            this.router.navigate(['/blogs']);
+          }, 2000);
+        }
+      },
+      error => {
         setTimeout(() => {
-          this.router.navigate(['blogs']);
+          this.processing = false;
+          this.enableForm();
         }, 2000);
+        this.toastr.error('Utilisateur introuvable', 'ERROR');
       }
-    });
+    );
   }
 
   ngOnInit() {

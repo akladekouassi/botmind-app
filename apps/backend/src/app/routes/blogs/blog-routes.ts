@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { isEqual, pick } from 'lodash/fp';
+const passport = require('passport');
 import {
   createUser,
   authenticateUser,
@@ -14,23 +15,13 @@ import {
   commentBlog,
   dislikeBlog,
 } from '../../../../../../libs/database-logics/src/index';
-import { User } from '../../../../../../libs/data-models/index';
-import {
-  ensureAuthenticated,
-  validateMiddleware,
-  shortIdValidation,
-  searchValidation,
-  userFieldsValidator,
-  isUserValidator,
-} from '../../helpers/index';
 
 const router = express.Router();
-// Routes
 
 /* ===============================================================
      ADD NEW BLOG POST
   =============================================================== */
-router.post('/addNewBlog', ensureAuthenticated, (req, res) => {
+router.post('/addNewBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
   const blogFromQuery: any = req.body;
   const blog = createNewBlog(blogFromQuery, res);
   return blog;
@@ -39,7 +30,8 @@ router.post('/addNewBlog', ensureAuthenticated, (req, res) => {
 /* ===============================================================
      GET ALL BLOGS 
   =============================================================== */
-router.get('/allBlogs', ensureAuthenticated, (req, res) => {
+router.get('/allBlogs', passport.authenticate('jwt', { session: false }), (req, res) => {
+  console.log('passport.authenticate', passport.authenticate('jwt', { session: false }));
   const blogs = getAllBlogs(res);
   return blogs;
 });
@@ -47,7 +39,7 @@ router.get('/allBlogs', ensureAuthenticated, (req, res) => {
 /* ===============================================================
      GET BLOG BY USER ID
   =============================================================== */
-router.get('/singleBlog/:id', ensureAuthenticated, (req, res) => {
+router.get('/singleBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const blog = getBlogByID(req.params.id, req, res);
   return blog;
 });
@@ -55,7 +47,7 @@ router.get('/singleBlog/:id', ensureAuthenticated, (req, res) => {
 /* ===============================================================
      GET ALL BLOG FOR USER AUTHENTICATED
   =============================================================== */
-router.get('/blogs/:id', ensureAuthenticated, (req, res) => {
+router.get('/blogs/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const blogs = getBlogsForSpecificUser(req.params.id, res);
   return blogs;
 });
@@ -63,7 +55,7 @@ router.get('/blogs/:id', ensureAuthenticated, (req, res) => {
 /* ===============================================================
      UPDATE BLOG
   =============================================================== */
-router.put('/updateBlog', ensureAuthenticated, (req, res) => {
+router.put('/updateBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
   const result = updateBlog(req.body, req, res);
   return result;
 });
@@ -71,7 +63,7 @@ router.put('/updateBlog', ensureAuthenticated, (req, res) => {
 /* ===============================================================
      DELETE BLOG
   =============================================================== */
-router.delete('/deleteBlog/:id', ensureAuthenticated, (req, res) => {
+router.delete('/deleteBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const result = deleteBlog(req, res);
   return result;
 });
@@ -79,7 +71,7 @@ router.delete('/deleteBlog/:id', ensureAuthenticated, (req, res) => {
 /* ===============================================================
      LIKE BLOG
   =============================================================== */
-router.put('/like', ensureAuthenticated, (req, res) => {
+router.put('/like', passport.authenticate('jwt', { session: false }), (req, res) => {
   const result = LikeABlog(req, res);
   return result;
 });
@@ -87,7 +79,7 @@ router.put('/like', ensureAuthenticated, (req, res) => {
 /* ===============================================================
      DISLIKE BLOG
   =============================================================== */
-router.put('/dislike', ensureAuthenticated, (req, res) => {
+router.put('/dislike', passport.authenticate('jwt', { session: false }), (req, res) => {
   const result = dislikeBlog(req, res);
   return result;
 });
@@ -95,7 +87,7 @@ router.put('/dislike', ensureAuthenticated, (req, res) => {
 /* ===============================================================
      COMMENT ON BLOG POST
   =============================================================== */
-router.post('/comment', ensureAuthenticated, (req, res) => {
+router.post('/comment', passport.authenticate('jwt', { session: false }), (req, res) => {
   // Check if comment was provided in request body
   const result = commentBlog(req, res);
   return result;

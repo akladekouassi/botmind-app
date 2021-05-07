@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import * as moment from 'moment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { environment } from '../../../../../apps/frontend/src/environments/environment';
+const headers = new HttpHeaders({ 'Content-type': 'application/json' });
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +16,7 @@ export class AuthService {
   userAuthenticated: any;
   options: RequestOptions;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private httpClient: HttpClient) {
     this.options = new RequestOptions({
       headers: new Headers({
         'Content-Type': 'application/json', // Format set to JSON
@@ -21,13 +25,22 @@ export class AuthService {
   }
 
   // Function to get token from client local storage
-  loadCurrentUser() {
-    this.userAuthenticated = JSON.parse(localStorage.getItem('user')); // Get token and asssign to variable to be used elsewhere
+  loadCurrentUser(): Observable<any> {
+    return JSON.parse(localStorage.getItem('user')); // Get token and asssign to variable to be used elsewhere
   }
 
   // Function to register user accounts
   registerUser(user: any): Observable<any> {
     return this.http.post(environment.REGISTER_USER_API_URL, user, this.options).pipe(map(res => res.json()));
+  }
+
+  // Function to register user accounts
+  modifyProfile(user: any, userID: string): Observable<any> {
+    return this.httpClient.post(environment.UPDATE_USER_PROFILE_API_URL + userID, user, { headers });
+  }
+  // Function to register user accounts
+  deleteAccount(username: any, email: string): Observable<any> {
+    return this.httpClient.post(environment.LOCAL_API_URL + '/users/deleteAccount', { username, email }, { headers });
   }
 
   // Function to check if username is taken
@@ -47,23 +60,43 @@ export class AuthService {
 
   // Function to logout
   logout() {
-    this.authToken = null;
-    this.userAuthenticated = null;
     localStorage.clear();
     return this.http.post(environment.LOGOUT_API_URL, {}).pipe(map(res => res.json()));
   }
 
+  getAllUsers(): Observable<any> {
+    return this.httpClient.get(environment.LOCAL_API_URL + '/users/getAllUsers', { headers });
+  }
+
   // Function to store user's data in client local storage
-  storeUserData(user: any, token?: string) {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    this.authToken = token;
-    this.userAuthenticated = user;
+  storeUserData(user: any) {
+    const expiresAt = moment().add(Number.parseInt(user.expiresIn), 'days');
+    localStorage.setItem('user', JSON.stringify(user.user));
+    localStorage.setItem('id_token', user.token);
+    localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
+  }
+
+  public isLoggedIn() {
+    return moment().isBefore(this.getExpiration(), 'second');
+  }
+
+  getExpiration() {
+    const expiration = localStorage.getItem('expires_at');
+    if (expiration) {
+      const expiresAt = JSON.parse(expiration);
+      return moment(expiresAt);
+    } else {
+      return moment();
+    }
+  }
+
+  isLoggedOut() {
+    return !this.isLoggedIn();
   }
 
   // Function to get user's profile data
   getProfile(): Observable<any> {
-    return this.http.get(environment.GET_USER_PROFILE_API_URL, this.options).pipe(map(res => res.json()));
+    return this.httpClient.get(environment.GET_USER_PROFILE_API_URL, { headers });
   }
 
   // Function to get public profile data

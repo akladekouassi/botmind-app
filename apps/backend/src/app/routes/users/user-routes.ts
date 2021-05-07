@@ -1,11 +1,14 @@
 import * as express from 'express';
 import { isEqual, pick } from 'lodash/fp';
+const passport = require('passport');
 import {
   createUser,
   getProfile,
   updateUserProfile,
   checkUsername,
   checkEmail,
+  getAllUsers,
+  deleteAccount,
 } from '../../../../../../libs/database-logics/src/index';
 import { User } from '../../../../../../libs/data-models/index';
 import { ensureAuthenticated, validateMiddleware, userFieldsValidator, isUserValidator } from '../../helpers/index';
@@ -19,9 +22,20 @@ router.post('/register', userFieldsValidator, validateMiddleware(isUserValidator
   return user;
 });
 
-router.get('/profile', ensureAuthenticated, (req, res) => {
+router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
   const user = getProfile(req, res);
   return user;
+});
+
+router.get('/getAllUsers', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const users = getAllUsers(res);
+  return users;
+});
+
+router.post('/deleteAccount', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const { username, email } = req.body;
+  const response = deleteAccount(username, email, req, res);
+  return response;
 });
 
 /* ============================================================
@@ -42,7 +56,7 @@ router.get('/checkUsername/:username', (req, res) => {
 
 router.post(
   '/updateProfile/:id',
-  ensureAuthenticated,
+  passport.authenticate('jwt', { session: false }),
   userFieldsValidator,
   validateMiddleware(isUserValidator),
   (req, res) => {

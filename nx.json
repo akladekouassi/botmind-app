@@ -18,6 +18,7 @@
     "service-auth": { "tags": [] },
     "blogs": { "tags": [] },
     "authentication": { "tags": [] },
-    "layout": { "tags": [] }
+    "layout": { "tags": [] },
+    "service-blogs": { "tags": [] }
   }
 }

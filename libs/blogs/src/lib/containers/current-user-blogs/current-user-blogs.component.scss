@@ -1,0 +1,31 @@
+.container {
+    display: block;
+    font-family: sans-serif;
+    min-width: 300px;
+    max-width: 600px;
+    margin: 50px auto;
+}
+
+p {
+    font-family: Lato;
+}
+
+.example-card {
+    max-width: "auto";
+    margin: 4px;
+}
+
+mat-card-subtitle {
+    font-size: 30px;
+}
+
+mat-card-title {
+    color: green;
+    font-size: 40px;
+}
+
+.cardHeader {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+}

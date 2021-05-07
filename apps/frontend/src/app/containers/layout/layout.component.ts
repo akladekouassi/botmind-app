@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent implements OnInit {
+  user: any;
   constructor(public authService: AuthService, private router: Router, private toastr: ToastrService) {}
 
   onLogoutClick() {
@@ -20,7 +21,11 @@ export class LayoutComponent implements OnInit {
     });
   }
 
+  getUser() {
+    this.authService.getProfile().subscribe(response => (this.user = response.user));
+  }
+
   ngOnInit(): void {
-    console.log('CURRENT USER::', this.authService.loggedIn());
+    this.getUser();
   }
 }

@@ -14,11 +14,11 @@ import { LoginFormComponent } from './components/login-form/login-form.component
 import { RegisterComponent } from './containers/register/register.component';
 import { RegisterFormComponent } from './components/register-form/register-form.component';
 import { AuthGuard } from '@botmind-app/authentication';
-import { AuthService } from '@botmind-app/service/auth';
+import { AuthService, AuthInterceptor } from '@botmind-app/service/auth';
 
 export const authenticationRoutes: Route[] = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  // { path: 'login', component: LoginComponent },
+  // { path: 'register', component: RegisterComponent },
 ];
 
 @NgModule({
@@ -26,15 +26,21 @@ export const authenticationRoutes: Route[] = [
     CommonModule,
     RouterModule,
     MaterialModule,
-    MaterialModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
-    HttpModule,
+    // HttpClientModule,
+    // HttpModule,
     ToastrModule.forRoot(),
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   declarations: [LoginComponent, LoginFormComponent, RegisterComponent, RegisterFormComponent],
 })
 export class AuthenticationModule {}

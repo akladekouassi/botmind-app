@@ -1,71 +1,48 @@
-import * as passport from 'passport';
 import * as express from 'express';
 import * as bcrypt from 'bcryptjs';
-import { authenticateUser, userModel } from '../../../../../../libs/database-logics/src/index';
-import { User } from '../../../../../../libs/data-models/index';
-import { ensureAuthenticated } from '../../helpers/checker';
-const jwt = require('jsonwebtoken');
-const LocalStrategy = require('passport-local').Strategy;
+import { userModel } from '../../../../../../libs/database-logics/src/index';
+
 const router = express.Router();
+const jwtStrategy = require('../../helpers/jwtStrategy');
 
-// configure passport for local strategy
-passport.use(
-  new LocalStrategy(function (username: string, password: string, done: Function) {
-    return authenticateUser(username, password, done);
-  })
-);
+// Validate an existing user and issue a JWT
+router.post('/login', function (req, res, next) {
+  userModel
+    .findOne({ username: req.body.username })
+    .then((user: any) => {
+      if (!user) {
+        return res.status(401).json({ success: false, message: 'could not find user' });
+      }
 
-passport.serializeUser((user: any, done) => {
-  done(null, user.id);
+      bcrypt.compare(req.body.password, user?.password, (err, isMatch) => {
+        if (err) throw err;
+        if (isMatch) {
+          const tokenObject = jwtStrategy.issueJWT(user);
+
+          res.status(200).json({
+            success: true,
+            message: 'Connected successfully',
+            user,
+            token: tokenObject.token,
+            expiresIn: tokenObject.expires,
+          });
+        } else {
+          res.status(401).json({ success: false, message: 'you entered the wrong password' });
+        }
+      });
+    })
+    .catch(err => {
+      next(err);
+    });
 });
-
-passport.deserializeUser((id, done) => {
-  userModel.findById(id, (err, user) => {
-    done(err, user);
-  });
-});
-
-// authentication routes
-router.post('/login', passport.authenticate('local'), (req: any, res: any): void => {
-  if (req.body.remember) {
-    req.session!.cookie.maxAge = 24 * 60 * 60 * 1000 * 30; // Expire in 30 days
-  } else {
-    req.session!.cookie.expires = false;
-  }
-
-  res.send({ success: true, message: 'Connected successfully', user: req.user });
-});
-
-// router.post('/login', (req, res, next) => {
-//   passport.authenticate('local', function (err, user, info) {
-//     if (err) {
-//       return res.status(400).json({ errors: err });
-//     }
-//     if (!user) {
-//       return res.status(400).json({ errors: 'No user found' });
-//     }
-//     req.logIn(user, function (err) {
-//       const token = jwt.sign({ userId: user._id }, 'botmind', { expiresIn: '48h' });
-//       if (err) {
-//         return res.status(400).json({ errors: err });
-//       }
-//       console.log('ISSSSS', req.isAuthenticated());
-//       return res.status(200).json({ success: true, message: 'Success!', user });
-//     });
-//   })(req, res, next);
-// });
 
 router.post('/logout', (req: express.Request, res: express.Response) => {
   res.clearCookie('connect.sid');
   req.logout();
-  req.session!.destroy(function (err) {
-    //   res.redirect('/');
-    return res.json({ success: true, message: 'loggedOut succesfully' });
-  });
+  return res.json({ success: true, message: 'loggedOut succesfully' });
 });
 
 router.get('/checkAuth', (req, res) => {
-  /* istanbul ignore next */
   if (!req.user) {
     res.status(401).json({ error: 'User is unauthorized' });
   } else {
