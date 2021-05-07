@@ -21,7 +21,8 @@
       "@botmind-app/service/auth": ["libs/service/auth/src/index.ts"],
       "@botmind-app/blogs": ["libs/blogs/src/index.ts"],
       "@botmind-app/authentication": ["libs/authentication/src/index.ts"],
-      "@botmind-app/layout": ["libs/layout/src/index.ts"]
+      "@botmind-app/layout": ["libs/layout/src/index.ts"],
+      "@botmind-app/service/blogs": ["libs/service/blogs/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

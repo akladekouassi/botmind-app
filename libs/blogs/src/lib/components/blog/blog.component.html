@@ -1,44 +1,101 @@
-<div flex="15">
-    <mat-card class="example-card">
-        <img mat-card-image src="./assets/logo.png" alt="Photo of a Shiba Inu" />
-        <mat-card-header>
-            <div mat-card-avatar class="avatarImage"></div>
-            <mat-card-title>Card Title</mat-card-title>
-            <mat-card-subtitle>Card Subtitle</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-            <h3>
-                This is the card dsqds dsqd sqdsq dsqd sqd sqd sqd sq dsq dsq dsqdqsdsq dsqds qdqsdsq content which is used to show some informaion to the end user
-            </h3>
-        </mat-card-content>
-        <mat-card-footer>
-            <h3>Copyright @ 2018 - Dotnettricks</h3>
-        </mat-card-footer>
-        <mat-card-actions>
-            <button mat-raised-button color="primary">Like</button>
-            <button mat-raised-button color="accent">Share</button>
-            <button mat-raised-button color="warn">Subscribe</button>
-        </mat-card-actions>
-    </mat-card>
-</div>
-<div flex="15">
-    <mat-card class="example-card">
-        <img mat-card-image src="./assets/logo.png" alt="Photo of a Shiba Inu" />
-        <mat-card-header>
-            <div mat-card-avatar class="avatarImage"></div>
-            <mat-card-title>Card Title</mat-card-title>
-            <mat-card-subtitle>Card Subtitle</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-            <h3>This is the card content which is used to show some informaion to the end user</h3>
-        </mat-card-content>
-        <mat-card-footer>
-            <h3>Copyright @ 2018 - Dotnettricks</h3>
-        </mat-card-footer>
-        <mat-card-actions>
-            <button mat-raised-button color="primary">Like</button>
-            <button mat-raised-button color="accent">Share</button>
-            <button mat-raised-button color="warn">Subscribe</button>
-        </mat-card-actions>
-    </mat-card>
+<div class="container">
+    <div flex="15" *ngFor="let blog of blogs; let i = index">
+        <mat-card class="example-card">
+            <div class="cardHeader">
+                <span></span>
+                <!-- <img mat-card-image src="./assets/logo.png" alt="Photo of a Shiba Inu" /> -->
+                <div *ngIf="currentUser?._id === blog.createdBy">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+                    <mat-menu #menu="matMenu">
+                        <button [routerLink]="['/edit-blog/', blog._id]" *ngIf="currentUser?._id === blog.createdBy" mat-menu-item>
+              <mat-icon>dialpad</mat-icon>
+              <span>Modifier</span>
+            </button>
+
+                        <button (click)="deleteBlog(blog._id)" *ngIf="currentUser._id === blog.createdBy" mat-menu-item>
+              <mat-icon>notifications_off</mat-icon>
+              <span>Supprimer</span>
+            </button>
+                    </mat-menu>
+                </div>
+            </div>
+            <mat-card-header>
+                <div mat-card-avatar class="avatarImage"></div>
+                <mat-card-title> {{ blog.title }} </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <h3>
+                    {{ blog.body }}
+                </h3>
+            </mat-card-content>
+            <mat-card-footer>
+                <div class="cardHeader">
+                    <h3>Publié le: {{ blog.createdAt | date: 'dd/MM/YYYY' }}</h3>
+                    <h3>Publié par: {{ getBlogAutor(blog.createdBy) }}</h3>
+                </div>
+            </mat-card-footer>
+
+            <mat-card-actions>
+                <button (click)="likeBlog(blog._id)" mat-stroked-button color="primary">Like: {{ blog.likes }}</button>
+                <button (click)="dislikeBlog(blog._id)" mat-stroked-button color="accent">Dislike: {{ blog.dislikes }}</button>
+                <button (click)="canComment(i)" mat-stroked-button color="warn">
+          {{ blog.createdBy === this.currentUser?._id ? 'Commentaires' : 'Commenter' }} : {{ blog.comments.length }}
+        </button>
+                <button (click)="canDisplayLiker(i)" mat-stroked-button color="warn">Liké par:</button>
+                <button (click)="canDisplayDisLikers(i)" mat-stroked-button color="warn">Disliké par:</button>
+            </mat-card-actions>
+            <div *ngIf="this.canDisplayLikers && i === activeIdx">
+                <mat-list role="list">
+                    <mat-list-item *ngFor="let liker of blog.likedBy" role="listitem">
+                        *
+                        <h4>{{ liker }}</h4>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+
+            <div *ngIf="this.canDisplayDislikers && i === activeIdx">
+                <mat-list role="list">
+                    <mat-list-item *ngFor="let disliker of blog.dislikedBy" role="listitem">
+                        *
+                        <h4>{{ disliker }}</h4>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+            <form [formGroup]="commentForm" *ngIf="this.canDisplayCommentField && i === activeIdx" class="example-form">
+                <div *ngFor="let comment of blog.comments">
+                    <mat-list role="list">
+                        <mat-list-item role="listitem">
+                            <div>
+                                <H4>{{ comment.commentator }}:</H4>
+                            </div>
+                            <div>{{ comment.comment }}</div>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+                <div *ngIf="this.currentUser?._id !== blog.createdBy">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Leave a comment</mat-label>
+                        <textarea matInput name="comment" formControlName="comment" placeholder="Ex. It makes me feel..."></textarea>
+                        <ul class="help-block">
+                            <li *ngIf="commentForm.controls.comment.errors?.required && commentForm.controls.comment.dirty">
+                                This field is required.
+                            </li>
+                            <li *ngIf="
+                  (commentForm.controls.comment.errors?.maxlength && commentForm.controls.comment.dirty) ||
+                  (commentForm.controls.comment.errors?.minlength && commentForm.controls.comment.dirty)
+                ">
+                                Comment must be at least 1 character but no more than 200.
+                            </li>
+                        </ul>
+                    </mat-form-field>
+                    <button [disabled]="!commentForm.valid || processing" type="submit" name="button" (click)="postComment(blog._id)" mat-stroked-button color="warn">
+            Publier
+          </button>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+    <!--  -->
 </div>

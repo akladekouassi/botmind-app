@@ -246,10 +246,43 @@ export const getProfile = (req: any, res: any) => {
   });
 };
 
+export const deleteAccount = (username: string, email: string, req: any, res: any) => {
+  userModel.findOneAndRemove({ username, email }).exec((err, response) => {
+    if (err) {
+      res.json({ success: false, message: err });
+    } else {
+      if (!response) {
+        res.json({ success: false, message: "You can't delete this account" });
+      } else {
+        res.clearCookie('connect.sid');
+        req.logout();
+        res.json({ success: true, message: 'Account deleted succesfully', response });
+      }
+    }
+  });
+};
+
+export const getAllUsers = (res: any) => {
+  return userModel
+    .find({}, (err, users) => {
+      // Check if error was found or not
+      if (err) {
+        return res.json({ success: false, message: err }); // Return error message
+      } else {
+        // Check if blogs were found in database
+        if (!users) {
+          return res.json({ success: false, message: 'No users found.' }); // Return error of no blogs found
+        } else {
+          return res.json({ success: true, users }); // Return success and blogs array
+        }
+      }
+    })
+    .sort({ _id: -1 });
+};
+
 // ALL QUERIES RELATIVES TO BLOGGGG
 export const getAllBlogs = (res: any) => {
   return BlogShema.find({}, (err, blogs) => {
-    console.log('ALL BLOG', blogs);
     // Check if error was found or not
     if (err) {
       return res.json({ success: false, message: err }); // Return error message
@@ -312,7 +345,7 @@ export const getBlogsForSpecificUser = (userID: string, res: any) => {
         if (!blog || blog.length === 0) {
           return res.json({ success: false, message: 'Blog not found.' }); // Return error message
         } else {
-          return res.json({ success: true, blog });
+          return res.json({ success: true, blogs: blog });
         }
       }
     });
@@ -330,12 +363,7 @@ export const createNewBlog = (blogParam: any, res: any) => {
     likedBy: [],
     dislikes: 0,
     dislikedBy: [],
-    comments: [
-      {
-        comment: 'No comment added yet',
-        commentator: '',
-      },
-    ],
+    comments: [],
   };
 
   const blogCreation = new BlogShema(blog);
@@ -471,7 +499,7 @@ export const LikeABlog = (req: any, res: any) => {
               } else {
                 // Check if user who liked post is the same user that originally created the blog post
                 if (parseInt(user._id) === parseInt(blog.createdBy)) {
-                  res.json({ success: false, messagse: 'Cannot like your own post.' }); // Return error message
+                  res.json({ success: false, message: 'Cannot like your own post.' }); // Return error message
                 } else {
                   // Check if the user who liked the post has already liked the blog post before
                   if (blog.likedBy.includes(user.username)) {
@@ -542,7 +570,7 @@ export const dislikeBlog = (req: any, res: any) => {
               } else {
                 // Check if user who disliekd post is the same person who originated the blog post
                 if (parseInt(user._id) === parseInt(blog.createdBy)) {
-                  res.json({ success: false, messagse: 'Cannot dislike your own post.' }); // Return error message
+                  res.json({ success: false, message: 'Cannot dislike your own post.' }); // Return error message
                 } else {
                   // Check if user who disliked post has already disliked it before
                   if (blog.dislikedBy.includes(user.username)) {

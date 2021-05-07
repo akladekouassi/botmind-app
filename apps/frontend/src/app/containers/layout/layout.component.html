@@ -7,20 +7,25 @@
 
     <section>
         <div>
-            <button *ngIf="authService.loggedIn()" mat-button class="mat-select-arrow-wrapper" ejs-dropdownbutton [matMenuTriggerFor]="menu">
-        {{ this.authService.loggedIn()?.firstName }} {{ this.authService.loggedIn()?.lastName }}
-        <mat-icon>arrow-down</mat-icon>
+            <button *ngIf="authService?.isLoggedIn()" routerLink="/blogs" routerLinkActive="active" mat-button>
+        Accueil
+      </button>
+
+            <button *ngIf="authService?.isLoggedIn()" mat-button class="mat-select-arrow-wrapper" ejs-dropdownbutton [matMenuTriggerFor]="menu">
+        {{ this.user?.firstName }} {{ this.user?.lastName }}
       </button>
             <mat-menu #menu="matMenu">
-                <button mat-menu-item>Ajouter un blog</button>
-                <button mat-menu-item>Editer mon profil</button>
-                <button mat-menu-item>Voire mes blogs</button>
+                <button routerLink="/blogs/add" mat-menu-item>Ajouter un blog</button>
+                <button routerLink="profile" mat-menu-item>Mon profil</button>
+                <button [routerLink]="['/blogs/users/', this.user?._id]" routerLinkActive="active" mat-menu-item>
+          Voire mes blogs
+        </button>
                 <button (click)="onLogoutClick()" mat-menu-item>Deconnexion</button>
             </mat-menu>
-            <button *ngIf="!authService.loggedIn()" routerLink="auth/login" routerLinkActive="active" mat-button>
+            <button *ngIf="!authService.isLoggedIn()" routerLink="/auth/login" routerLinkActive="active" mat-button>
         Connexion
       </button>
-            <button *ngIf="!authService.loggedIn()" routerLink="auth/register" routerLinkActive="active" mat-button>
+            <button *ngIf="!authService.isLoggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{ exact: true }" routerLink="/auth/register" routerLinkActive="active" mat-button>
         Inscription
       </button>
         </div>

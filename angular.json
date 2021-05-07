@@ -385,6 +385,29 @@
           }
         }
       }
+    },
+    "service-blogs": {
+      "projectType": "library",
+      "root": "libs/service/blogs",
+      "sourceRoot": "libs/service/blogs/src",
+      "prefix": "botmind-app",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/service/blogs/tsconfig.lib.json", "libs/service/blogs/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/service/blogs/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/service/blogs"],
+          "options": {
+            "jestConfig": "libs/service/blogs/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   }
 }

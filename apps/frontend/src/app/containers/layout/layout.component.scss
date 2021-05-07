@@ -1,9 +1,14 @@
 .example-spacer {
-    flex: 1 1 auto;
+    flex: 1;
+}
+
+flexDisplay {
+    display: inline;
+    flex-direction: row;
 }
 
 section {
-    display: table;
+    display: flex;
 }
 
 .example-label {

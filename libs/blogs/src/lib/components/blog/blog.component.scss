@@ -1,9 +1,17 @@
+.container {
+    display: block;
+    font-family: sans-serif;
+    min-width: 300px;
+    max-width: 600px;
+    margin: 50px auto;
+}
+
 p {
     font-family: Lato;
 }
 
 .example-card {
-    max-width: 500px;
+    max-width: "auto";
     margin: 4px;
 }
 
@@ -14,4 +22,23 @@ mat-card-subtitle {
 mat-card-title {
     color: green;
     font-size: 40px;
+}
+
+.cardHeader {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 10px 0 10px;
+}
+
+.modal {
+    display: none;
+    font-family: sans-serif;
+    min-width: 300px;
+    max-width: 600px;
+    margin: 50px auto;
+}
+
+.mat-form-field+.mat-form-field {
+    margin-left: 8px;
 }

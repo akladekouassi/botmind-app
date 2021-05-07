@@ -9,5 +9,6 @@ module.exports = {
     '<rootDir>/libs/blogs',
     '<rootDir>/libs/authentication',
     '<rootDir>/libs/layout',
+    '<rootDir>/libs/service/blogs',
   ],
 };

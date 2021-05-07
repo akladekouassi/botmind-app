@@ -80,6 +80,7 @@
     "morgan": "^1.10.0",
     "ngx-toastr": "^13.2.1",
     "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "rxjs": "~6.6.3",

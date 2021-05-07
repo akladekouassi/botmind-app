@@ -1,0 +1,55 @@
+<div class="container">
+    <mat-card>
+        <mat-card-title>AJOUTER UN BLOG</mat-card-title>
+        <mat-card-content>
+            <form [formGroup]="form" name="blogForm" (submit)="updateBlogSubmit()" fxLayout="column" fxLayoutAlign="center none">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Titre du blog</mat-label>
+                    <input matInput [disabled]="processing" type="text" name="title" placeholder="*Blog Title" class="form-control" formControlName="title" />
+                    <mat-error>
+                        <ul class="help-block">
+                            <li *ngIf="form.controls.title.dirty && form.controls.title.errors?.required">This field is required.</li>
+                            <li *ngIf="
+                  (form.controls.title.dirty && form.controls.title.errors?.minlength) ||
+                  (form.controls.title.dirty && form.controls.title.errors?.maxlength)
+                ">
+                                Max length: 50, Min length: 5
+                            </li>
+                            <li *ngIf="form.controls.title.dirty && form.controls.title.errors?.alphaNumericValidation">
+                                Must be a letter or number
+                            </li>
+                        </ul>
+                    </mat-error>
+                </mat-form-field>
+                <!-- Password Input -->
+                <mat-form-field class="example-full-width">
+                    <mat-label>Contenu du blog</mat-label>
+                    <textarea matInput [disabled]="processing" name="body" rows="8" cols="80" placeholder="*Blog Body" formControlName="body"></textarea>
+
+                    <mat-error>
+                        <ul class="help-block">
+                            <li *ngIf="form.controls.body.dirty && form.controls.body.errors?.required">This field is required.</li>
+                            <li *ngIf="
+                  (form.controls.body.dirty && form.controls.body.errors?.minlength) ||
+                  (form.controls.body.dirty && form.controls.body.errors?.maxlength)
+                ">
+                                Max length: 500, Min length: 5
+                            </li>
+                        </ul>
+                    </mat-error>
+                </mat-form-field>
+                <!-- <button mat-raised-button type="submit" class="btn btn-primary">Valider</button> -->
+                <div>
+                    <button mat-raised-button [disabled]="processing" type="button" name="button" (click)="goBack()" class="btn btn-warning">
+            Annuler
+          </button>
+                    <!-- Submit Button -->
+                    <button mat-raised-button (submit)="updateBlogSubmit()" [disabled]="processing" type="submit" name="button" class="btn btn-success">
+            Valider
+          </button>
+                </div>
+            </form>
+            <!-- Go Back Button -->
+        </mat-card-content>
+    </mat-card>
+</div>
