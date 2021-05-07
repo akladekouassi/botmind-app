@@ -6,11 +6,10 @@ import * as cors from 'cors';
 import userRoutes from './app/routes/users/user-routes';
 import auth from './app/routes/auth/auth';
 import blogRoutes from './app/routes/blogs/blog-routes';
+// import {  } from "../../frontend/";
 
-const CLIENT_BUILD_PATH = path.join(__dirname, '../frontend');
+const CLIENT_BUILD_PATH = path.join(__dirname, '../../frontend/');
 const app = express();
-
-app.use(express.static(CLIENT_BUILD_PATH));
 
 require('dotenv').config();
 require('../src/app/helpers/dbConnexion');
@@ -30,8 +29,10 @@ require('../../backend/src/app/helpers/passport')(passport);
 
 app.use(passport.initialize());
 
+app.use(express.static(CLIENT_BUILD_PATH));
+
 app.get('/api', (req, res) => {
-  res.send({ message: 'THIS APPS WORK WELLE' });
+  res.send({ message: 'THIS APPS WORK WELL' });
 });
 
 app.use(auth);
