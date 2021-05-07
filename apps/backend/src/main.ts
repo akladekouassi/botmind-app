@@ -1,3 +1,4 @@
+import * as path from 'path';
 import * as express from 'express';
 import * as logger from 'morgan';
 import * as passport from 'passport';
@@ -5,9 +6,11 @@ import * as cors from 'cors';
 import userRoutes from './app/routes/users/user-routes';
 import auth from './app/routes/auth/auth';
 import blogRoutes from './app/routes/blogs/blog-routes';
-import { environment } from '../src/environments/environment';
 
+const CLIENT_BUILD_PATH = path.join(__dirname, '../frontend');
 const app = express();
+
+app.use(express.static(CLIENT_BUILD_PATH));
 
 require('dotenv').config();
 require('../src/app/helpers/dbConnexion');
@@ -31,7 +34,13 @@ app.use(auth);
 app.use('/users', userRoutes);
 app.use('/blog', blogRoutes);
 
-const server = app.listen(environment.PORT, () => {
-  console.log(`Listening at ${environment.PORT}`);
+app.get('*', (request, response) => {
+  response.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
+});
+
+const port = process.env.PORT || 3001;
+
+const server = app.listen(port, () => {
+  console.log(`Listening at ${port}`);
 });
 server.on('error', console.error);
