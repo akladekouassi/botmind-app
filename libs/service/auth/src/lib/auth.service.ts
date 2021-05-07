@@ -55,7 +55,7 @@ export class AuthService {
 
   // Function to login user
   login(username: string, password: string): Observable<any> {
-    return this.http.post(environment.LOGIN_API_URL, { username, password }).pipe(map(res => res.json()));
+    return this.http.post('http://localhost:5000/login', { username, password }).pipe(map(res => res.json()));
   }
 
   // Function to logout

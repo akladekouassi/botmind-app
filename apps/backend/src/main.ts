@@ -7,8 +7,9 @@ import userRoutes from './app/routes/users/user-routes';
 import auth from './app/routes/auth/auth';
 import blogRoutes from './app/routes/blogs/blog-routes';
 // import {  } from "../../frontend/";
+// import {  } from "../../../dist/apps/frontend";
 
-const CLIENT_BUILD_PATH = path.join(__dirname, '../../frontend/');
+const CLIENT_BUILD_PATH = path.join(__dirname, '../../../dist/apps/frontend');
 const app = express();
 
 require('dotenv').config();
@@ -40,7 +41,7 @@ app.use('/users', userRoutes);
 app.use('/blog', blogRoutes);
 
 app.get('*', (request, response) => {
-  response.sendFile(path.resolve(__dirname, '../../frontend/src', 'index.html'));
+  response.sendFile(path.resolve(__dirname, '../../../dist/apps/frontend', 'index.html'));
 });
 
 const port = process.env.PORT || 3001;
