@@ -17,7 +17,7 @@
         "start:api": "npm run config:generate:envFiles -- --environment=dev && nx serve backend",
         "build:backend": "npm run config:generate:envFiles -- --environment=prod && nx build backend --configuration=production",
         "start": "node dist/apps/backend/main.js",
-        "build": "yarn nx run-many --target=build --projects=frontend,backend --parallel=true",
+        "build": "concurrently \"yarn build:frontend\" \"yarn build:backend\"",
         "------ALL-TEST-AND-LINTNG-RELATIVES-CMDs------": "",
         "test": "ng test",
         "lint": "nx workspace-lint && ng lint",
