@@ -31,7 +31,9 @@ if (
   !process.env.DISLIKE_A_BLOG ||
   !process.env.COMMENT_A_BLOG ||
   !process.env.CHECK_EMAIL_API_URL ||
-  !process.env.CHECK_USERNAME_API_URL
+  !process.env.CHECK_USERNAME_API_URL ||
+  !process.env.DELETE_USER_ACCOUNT_API_URL ||
+  !process.env.GET_ALL_USERS_API_URL
 ) {
   console.error('All the required environment variables were not provided!');
   process.exit(-1);
@@ -68,6 +70,8 @@ export const environment = {
    COMMENT_A_BLOG_API_URL: "${process.env.LOCAL_API_URL}${process.env.COMMENT_A_BLOG}",
    CHECK_EMAIL_API_URL: "${process.env.LOCAL_API_URL}${process.env.CHECK_EMAIL_API_URL}",
    CHECK_USERNAME_API_URL: "${process.env.LOCAL_API_URL}${process.env.CHECK_USERNAME_API_URL}",
+   DELETE_USER_ACCOUNT_API_URL: "${process.env.LOCAL_API_URL}${process.env.DELETE_USER_ACCOUNT_API_URL}",
+   GET_ALL_USERS_API_URL: "${process.env.LOCAL_API_URL}${process.env.GET_ALL_USERS_API_URL}",
    PORT:"${process.env.PORT}",
    MONGODB_USER_PASS:"${process.env.MONGODB_USER_PASS}",
    MONGODB_URL:"${process.env.MONGODB_URL}",
@@ -99,6 +103,8 @@ export const environment = {
    COMMENT_A_BLOG_API_URL: "${process.env.LOCAL_API_URL}${process.env.COMMENT_A_BLOG}",
    CHECK_EMAIL_API_URL: "${process.env.LOCAL_API_URL}${process.env.CHECK_EMAIL_API_URL}",
    CHECK_USERNAME_API_URL: "${process.env.LOCAL_API_URL}${process.env.CHECK_USERNAME_API_URL}",
+    DELETE_USER_ACCOUNT_API_URL: "${process.env.LOCAL_API_URL}${process.env.DELETE_USER_ACCOUNT_API_URL}",
+   GET_ALL_USERS_API_URL: "${process.env.LOCAL_API_URL}${process.env.GET_ALL_USERS_API_URL}",
    PORT:"${process.env.PORT}",
    MONGODB_USER_PASS:"${process.env.MONGODB_USER_PASS}",
    MONGODB_URL:"${process.env.MONGODB_URL}",
