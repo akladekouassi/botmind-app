@@ -22,7 +22,6 @@ export const environment = {
    CHECK_USERNAME_API_URL: "http://localhost:3001/users/checkUsername/",
     DELETE_USER_ACCOUNT_API_URL: "http://localhost:3001/users/deleteAccount",
    GET_ALL_USERS_API_URL: "http://localhost:3001/users/getAllUsers",
-   PORT:"3001",
    MONGODB_USER_PASS:"Akladekouassi:Akladekouassi",
    MONGODB_URL:"cluster0.8stux.mongodb.net",
    MONGODB_NAME: "Botmind",

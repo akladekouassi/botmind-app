@@ -30,6 +30,10 @@ require('../../backend/src/app/helpers/passport')(passport);
 
 app.use(passport.initialize());
 
+app.get('/api', (req, res) => {
+  res.send({ message: 'THIS APPS WORK WELLE' });
+});
+
 app.use(auth);
 app.use('/users', userRoutes);
 app.use('/blog', blogRoutes);

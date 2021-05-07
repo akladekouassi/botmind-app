@@ -8,7 +8,6 @@ const isProduction = environment === 'prod';
 
 if (
   !process.env.LOCAL_API_URL ||
-  !process.env.PORT ||
   !process.env.MONGODB_USER_PASS ||
   !process.env.MONGODB_URL ||
   !process.env.MONGODB_NAME ||
@@ -72,7 +71,6 @@ export const environment = {
    CHECK_USERNAME_API_URL: "${process.env.LOCAL_API_URL}${process.env.CHECK_USERNAME_API_URL}",
    DELETE_USER_ACCOUNT_API_URL: "${process.env.LOCAL_API_URL}${process.env.DELETE_USER_ACCOUNT_API_URL}",
    GET_ALL_USERS_API_URL: "${process.env.LOCAL_API_URL}${process.env.GET_ALL_USERS_API_URL}",
-   PORT:"${process.env.PORT}",
    MONGODB_USER_PASS:"${process.env.MONGODB_USER_PASS}",
    MONGODB_URL:"${process.env.MONGODB_URL}",
    MONGODB_NAME: "${process.env.MONGODB_NAME}",
@@ -105,7 +103,6 @@ export const environment = {
    CHECK_USERNAME_API_URL: "${process.env.LOCAL_API_URL}${process.env.CHECK_USERNAME_API_URL}",
     DELETE_USER_ACCOUNT_API_URL: "${process.env.LOCAL_API_URL}${process.env.DELETE_USER_ACCOUNT_API_URL}",
    GET_ALL_USERS_API_URL: "${process.env.LOCAL_API_URL}${process.env.GET_ALL_USERS_API_URL}",
-   PORT:"${process.env.PORT}",
    MONGODB_USER_PASS:"${process.env.MONGODB_USER_PASS}",
    MONGODB_URL:"${process.env.MONGODB_URL}",
    MONGODB_NAME: "${process.env.MONGODB_NAME}",
