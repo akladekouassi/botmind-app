@@ -40,7 +40,7 @@ app.use('/users', userRoutes);
 app.use('/blog', blogRoutes);
 
 app.get('*', (request, response) => {
-  response.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
+  response.sendFile(path.resolve(__dirname, '../../frontend/src', 'index.html'));
 });
 
 const port = process.env.PORT || 3001;
