@@ -5,15 +5,12 @@ import { AuthService } from '@botmind-app/service/auth';
 @Injectable()
 export class NotAuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
-
-  // Function to determine whether user is authorized to view route
   canActivate() {
-    // Check if user is logged in
     if (this.authService.loggedIn()) {
-      this.router.navigate(['/auth/login']); // Return error, route to home
-      return false; // Return false: user not allowed to view route
+      this.router.navigate(['/auth/login']);
+      return false;
     } else {
-      return true; // Return true: user is allowed to view route
+      return true;
     }
   }
 }

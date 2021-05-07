@@ -1,7 +1,6 @@
 import * as express from 'express';
 import * as bcrypt from 'bcryptjs';
-import { userModel } from '../../../../../../libs/database-logics/src/index';
-
+import { userModel } from 'apps/backend/src/app/routes/users/user-models';
 const router = express.Router();
 const jwtStrategy = require('../../helpers/jwtStrategy');
 

@@ -1,6 +1,5 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroupDirective, NgForm, Validators, FormGroup } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '@botmind-app/service/auth';
 import { Router } from '@angular/router';
@@ -14,13 +13,7 @@ export class ProfileComponent implements OnInit {
   canDisplayField: boolean = false;
   form: FormGroup;
   currentUser: any;
-  message: string;
-  messageClass: any;
   processing: boolean = false;
-  emailValid: boolean;
-  emailMessage: string;
-  usernameValid: boolean;
-  usernameMessage: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -61,7 +54,6 @@ export class ProfileComponent implements OnInit {
   createForm() {
     this.form = this.formBuilder.group(
       {
-        // Email Input
         email: [
           '',
           Validators.compose([
@@ -71,7 +63,6 @@ export class ProfileComponent implements OnInit {
             this.validateEmail,
           ]),
         ],
-        // Username Input
         username: [
           '',
           Validators.compose([
@@ -95,35 +86,35 @@ export class ProfileComponent implements OnInit {
           '',
 
           Validators.compose([
-            Validators.required, // Field is required
-            Validators.minLength(3), // Minimum length is 3 characters
-            Validators.maxLength(20), // Maximum length is 15 characters
-            this.validateOrdinaryText, // Custom validation
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(20),
+            this.validateOrdinaryText,
           ]),
         ],
         lastName: [
           '',
           Validators.compose([
-            Validators.required, // Field is required
-            Validators.minLength(3), // Minimum length is 3 characters
-            Validators.maxLength(20), // Maximum length is 15 characters
-            this.validateOrdinaryText, // Custom validation
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(20),
+            this.validateOrdinaryText,
           ]),
         ],
         phoneNumber: [
           '',
           Validators.compose([
-            Validators.required, // Field is required
-            Validators.minLength(3), // Minimum length is 3 characters
-            Validators.maxLength(20), // Maximum length is 15 characters
-            this.validatePhoneNumber, // Custom validation
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(20),
+            this.validatePhoneNumber,
           ]),
         ],
         // Confirm Password Input
-        confirm: ['', Validators.required], // Field is required
+        confirm: ['', Validators.required],
       },
       { validator: this.matchingPasswords('password', 'confirm') }
-    ); // Add custom validator to form for matching passwords
+    );
   }
 
   // Function to disable the registration form
@@ -150,15 +141,13 @@ export class ProfileComponent implements OnInit {
 
   // Function to validate e-mail is proper format
   validateEmail(controls) {
-    // Create a regular expression
     const regExp = new RegExp(
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
-    // Test email against regular expression
     if (regExp.test(controls.value)) {
-      return null; // Return as valid email
+      return null;
     } else {
-      return { validateEmail: true }; // Return as invalid email
+      return { validateEmail: true };
     }
   }
 

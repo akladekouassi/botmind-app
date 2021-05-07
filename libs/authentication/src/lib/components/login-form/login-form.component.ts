@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '@botmind-app/service/auth';
 import { Router } from '@angular/router';
@@ -11,10 +11,8 @@ import { AuthGuard } from '@botmind-app/authentication';
   styleUrls: ['./login-form.component.scss'],
 })
 export class LoginFormComponent implements OnInit {
-  messageClass;
-  message;
   processing = false;
-  form;
+  form: FormGroup;
   previousUrl;
   constructor(
     private formBuilder: FormBuilder,
@@ -76,14 +74,14 @@ export class LoginFormComponent implements OnInit {
           this.processing = false;
           this.enableForm();
         }, 2000);
-        this.toastr.error('Utilisateur introuvable', 'ERROR');
+        this.toastr.error('Utilisateur introuvable', 'MESSAGE');
       }
     );
   }
 
   ngOnInit() {
     if (this.authGuard.redirectUrl) {
-      this.toastr.error('Vous devez être connectés pour acceder a cette page.', 'erreur');
+      this.toastr.error('Vous devez être connecté pour acceder à cette page.', 'MESSAGE');
       this.previousUrl = this.authGuard.redirectUrl;
       this.authGuard.redirectUrl = undefined;
     }

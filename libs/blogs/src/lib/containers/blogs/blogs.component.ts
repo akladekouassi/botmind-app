@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { BlogsService } from '@botmind-app/service/blogs';
 
 @Component({
   selector: 'botmind-app-blogs',
@@ -7,9 +6,7 @@ import { BlogsService } from '@botmind-app/service/blogs';
   styleUrls: ['./blogs.component.scss'],
 })
 export class BlogsComponent implements OnInit {
-  constructor(private blogService: BlogsService) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.blogService.getAllBlogs().subscribe(response => console.log('ALL BLOGSSSS::', response));
-  }
+  ngOnInit(): void {}
 }

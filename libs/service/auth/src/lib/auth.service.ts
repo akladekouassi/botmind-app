@@ -3,8 +3,8 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
+import { User } from 'libs/data-models';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { environment } from '../../../../../apps/frontend/src/environments/environment';
 const headers = new HttpHeaders({ 'Content-type': 'application/json' });
 
@@ -26,7 +26,7 @@ export class AuthService {
 
   // Function to get token from client local storage
   loadCurrentUser(): Observable<any> {
-    return JSON.parse(localStorage.getItem('user')); // Get token and asssign to variable to be used elsewhere
+    return JSON.parse(localStorage.getItem('user'));
   }
 
   // Function to register user accounts
@@ -65,7 +65,7 @@ export class AuthService {
   }
 
   getAllUsers(): Observable<any> {
-    return this.httpClient.get(environment.LOCAL_API_URL + '/users/getAllUsers', { headers });
+    return this.httpClient.get<User[]>(environment.LOCAL_API_URL + '/users/getAllUsers', { headers });
   }
 
   // Function to store user's data in client local storage
@@ -98,12 +98,6 @@ export class AuthService {
   getProfile(): Observable<any> {
     return this.httpClient.get(environment.GET_USER_PROFILE_API_URL, { headers });
   }
-
-  // Function to get public profile data
-  // getPublicProfile(username) {
-  //   this.createAuthenticationHeaders(); // Create headers before sending to API
-  //   return this.http.get(this.domain + 'authentication/publicProfile/' + username, this.options).map(res => res.json());
-  // }
 
   // Function to check if user is logged in
   loggedIn() {

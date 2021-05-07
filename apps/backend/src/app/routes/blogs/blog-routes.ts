@@ -1,10 +1,6 @@
 import * as express from 'express';
-import { isEqual, pick } from 'lodash/fp';
 const passport = require('passport');
 import {
-  createUser,
-  authenticateUser,
-  userModel,
   createNewBlog,
   getAllBlogs,
   getBlogByID,
@@ -14,7 +10,8 @@ import {
   LikeABlog,
   commentBlog,
   dislikeBlog,
-} from '../../../../../../libs/database-logics/src/index';
+} from 'libs/database-logics/src/index';
+import { userModel } from 'apps/backend/src/app/routes/users/user-models';
 
 const router = express.Router();
 
@@ -31,7 +28,6 @@ router.post('/addNewBlog', passport.authenticate('jwt', { session: false }), (re
      GET ALL BLOGS 
   =============================================================== */
 router.get('/allBlogs', passport.authenticate('jwt', { session: false }), (req, res) => {
-  console.log('passport.authenticate', passport.authenticate('jwt', { session: false }));
   const blogs = getAllBlogs(res);
   return blogs;
 });
@@ -88,7 +84,6 @@ router.put('/dislike', passport.authenticate('jwt', { session: false }), (req, r
      COMMENT ON BLOG POST
   =============================================================== */
 router.post('/comment', passport.authenticate('jwt', { session: false }), (req, res) => {
-  // Check if comment was provided in request body
   const result = commentBlog(req, res);
   return result;
 });
