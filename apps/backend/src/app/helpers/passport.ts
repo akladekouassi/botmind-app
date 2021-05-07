@@ -2,7 +2,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const fs = require('fs');
 const path = require('path');
-import { userModel } from '../../../../../libs/database-logics/src/index';
+import { userModel } from 'apps/backend/src/app/routes/users/user-models';
 
 const pathToKey = path.join(__dirname, '../../..', 'id_rsa_priv.pem');
 const PUB_KEY = fs.readFileSync(pathToKey, 'utf8');

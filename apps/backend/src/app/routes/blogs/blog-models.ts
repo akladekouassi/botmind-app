@@ -4,7 +4,6 @@ const Schema = mongoose.Schema; // Import Schema from Mongoose
 
 // Validate Function to check blog title length
 let titleLengthChecker = title => {
-  // Check if blog title exists
   if (!title) {
     return false; // Return error
   } else {

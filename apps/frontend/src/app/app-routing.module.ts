@@ -2,7 +2,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { LoginComponent, RegisterComponent, NotAuthGuard, AuthGuard } from '@botmind-app/authentication';
 import { BlogsComponent } from '@botmind-app/blogs';
-import { LoginFormComponent } from 'libs/authentication/src/lib/components/login-form/login-form.component';
 import {
   AddBlogFormComponent,
   CurrentUserBlogsComponent,
@@ -14,59 +13,44 @@ import {
 const appRoutes: Routes = [
   {
     path: '',
-    component: LoginComponent, // Default Route
+    component: LoginComponent,
   },
   {
     path: 'auth/register',
-    component: RegisterComponent, // Register Route
-    canActivate: [NotAuthGuard], // User must NOT be logged in to view this route
+    component: RegisterComponent,
+    canActivate: [NotAuthGuard],
   },
   {
     path: 'auth/login',
-    component: LoginComponent, // Login Route
-    canActivate: [NotAuthGuard], // User must NOT be logged in to view this route
+    component: LoginComponent,
+    canActivate: [NotAuthGuard],
   },
-  // {
-  //   path: 'profile',
-  //   component: ProfileComponent, // Profile Route
-  //   canActivate: [AuthGuard], // User must be logged in to view this route
-  // },
   {
     path: 'blogs',
-    component: BlogsComponent, // Blog Route,
-    canActivate: [AuthGuard], // User must be logged in to view this route
+    component: BlogsComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'blogs/add',
     component: AddBlogFormComponent,
-    canActivate: [AuthGuard], // User must NOT be logged in to view this route
+    canActivate: [AuthGuard],
   },
   {
     path: 'blogs/users/:id',
     component: CurrentUserBlogsComponent,
-    canActivate: [AuthGuard], // User must NOT be logged in to view this route
+    canActivate: [AuthGuard],
   },
   {
     path: 'edit-blog/:id',
-    component: EditBlogComponent, // Edit Blog Route
-    canActivate: [AuthGuard], // User must be logged in to view this route
+    component: EditBlogComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'profile',
-    component: ProfileComponent, // Edit Blog Route
-    canActivate: [AuthGuard], // User must be logged in to view this route
+    component: ProfileComponent,
+    canActivate: [AuthGuard],
   },
-  // {
-  //   path: 'delete-blog/:id',
-  //   component: DeleteBlogComponent, // Delete Blog Route
-  //   canActivate: [AuthGuard], // User must be logged in to view this route
-  // },
-  // {
-  //   path: 'user/:username',
-  //   component: PublicProfileComponent, // Public Profile Route
-  //   canActivate: [AuthGuard], // User must be logged in to view this route
-  // },
-  { path: '**', redirectTo: 'auth/login' }, // "Catch-All" Route
+  { path: '**', redirectTo: 'auth/login' },
 ];
 
 @NgModule({

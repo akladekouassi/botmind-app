@@ -11,14 +11,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./register-form.component.scss'],
 })
 export class RegisterFormComponent implements OnInit {
-  form: any;
-  message: string;
-  messageClass: any;
+  form: FormGroup;
   processing: boolean = false;
   emailValid: boolean;
-  emailMessage: string;
   usernameValid: boolean;
-  usernameMessage: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
@@ -30,11 +26,9 @@ export class RegisterFormComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  // Function to create registration form
   createForm() {
     this.form = this.formBuilder.group(
       {
-        // Email Input
         email: [
           '',
           Validators.compose([
@@ -44,7 +38,7 @@ export class RegisterFormComponent implements OnInit {
             this.validateEmail,
           ]),
         ],
-        // Username Input
+
         username: [
           '',
           Validators.compose([
@@ -54,7 +48,7 @@ export class RegisterFormComponent implements OnInit {
             this.validateOrdinaryText,
           ]),
         ],
-        // Password Input
+
         password: [
           '',
           Validators.compose([
@@ -67,35 +61,35 @@ export class RegisterFormComponent implements OnInit {
         firstName: [
           '',
           Validators.compose([
-            Validators.required, // Field is required
-            Validators.minLength(3), // Minimum length is 3 characters
-            Validators.maxLength(20), // Maximum length is 15 characters
-            this.validateOrdinaryText, // Custom validation
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(20),
+            this.validateOrdinaryText,
           ]),
         ],
         lastName: [
           '',
           Validators.compose([
-            Validators.required, // Field is required
-            Validators.minLength(3), // Minimum length is 3 characters
-            Validators.maxLength(20), // Maximum length is 15 characters
-            this.validateOrdinaryText, // Custom validation
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(20),
+            this.validateOrdinaryText,
           ]),
         ],
         phoneNumber: [
           '',
           Validators.compose([
-            Validators.required, // Field is required
-            Validators.minLength(3), // Minimum length is 3 characters
-            Validators.maxLength(20), // Maximum length is 15 characters
-            this.validatePhoneNumber, // Custom validation
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(20),
+            this.validatePhoneNumber,
           ]),
         ],
-        // Confirm Password Input
-        confirm: ['', Validators.required], // Field is required
+
+        confirm: ['', Validators.required],
       },
       { validator: this.matchingPasswords('password', 'confirm') }
-    ); // Add custom validator to form for matching passwords
+    );
   }
 
   // Function to disable the registration form
@@ -122,15 +116,14 @@ export class RegisterFormComponent implements OnInit {
 
   // Function to validate e-mail is proper format
   validateEmail(controls) {
-    // Create a regular expression
     const regExp = new RegExp(
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
-    // Test email against regular expression
+
     if (regExp.test(controls.value)) {
-      return null; // Return as valid email
+      return null;
     } else {
-      return { validateEmail: true }; // Return as invalid email
+      return { validateEmail: true };
     }
   }
 
@@ -147,7 +140,7 @@ export class RegisterFormComponent implements OnInit {
   }
 
   validateOrdinaryText(controls) {
-    const regExp = new RegExp(/^[a-zA-Z0-9]+$/);
+    const regExp = new RegExp(/^[a-zA-Z0-9 ]+$/);
 
     if (regExp.test(controls.value)) {
       return null;

@@ -1,76 +1,9 @@
-import * as path from 'path';
 import * as bcrypt from 'bcryptjs';
-import { v4 } from 'uuid';
-import { remove } from 'lodash/fp';
-import * as shortid from 'shortid';
-import { isWithinInterval } from 'date-fns';
 import * as mongoose from 'mongoose';
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto').randomBytes(256).toString('hex'); // Provides cryptographic functionality (OpenSSL's hash, HMAC, cipher, decipher, sign and verify functions)
-const BlogShema = require('../../../../apps/backend/src/app/routes/blogs/blog-models');
-const { Schema, model } = mongoose;
-const { isEmail } = require('validator');
-import { User, DbSchema } from '../../../data-models/index';
+const BlogShema = require('apps/backend/src/app/routes/blogs/blog-models');
+import { User } from 'libs/data-models/index';
+import { userModel } from 'apps/backend/src/app/routes/users/user-models';
 
-// USERS LOGICS
-const userSchema: any = new Schema(
-  {
-    username: {
-      type: String,
-      required: true,
-      minLength: 3,
-      maxLength: 55,
-      unique: true,
-      trim: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      validate: [isEmail],
-      lowercase: true,
-      unique: true,
-      trim: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      max: 1024,
-      minlength: 6,
-    },
-    firstName: {
-      type: String,
-      required: true,
-      minLength: 3,
-      maxLength: 55,
-      unique: true,
-      trim: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-      minLength: 3,
-      maxLength: 55,
-      unique: true,
-      trim: true,
-    },
-    avatar: {
-      type: String,
-      default: './uploads/profil/random-user.png',
-    },
-    phoneNumber: {
-      type: Number,
-      required: true,
-      minLength: 8,
-      maxLength: 35,
-      unique: false,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-export const userModel = model('user', userSchema);
 export const authenticateUser = (username: string, password: string, done: Function) => {
   userModel
     .findOne({ username })
@@ -89,32 +22,18 @@ export const authenticateUser = (username: string, password: string, done: Funct
     });
 };
 
-export const getUSerProfile = (req: any, res: any) => {
-  userModel.findOne({ _id: req.decoded.userId }).exec((err, user) => {
-    if (err) {
-      res.json({ success: false, message: err });
-    } else {
-      if (!user) {
-        res.json({ success: false, message: 'User not found' });
-      } else {
-        res.json({ success: true, user: user });
-      }
-    }
-  });
-};
-
 export const checkUsername = (username: string, res: any) => {
   if (!username) {
     res.json({ success: false, message: 'Username was not provided' }); // Return error
   } else {
     userModel.findOne({ username }, (err, user) => {
       if (err) {
-        res.json({ success: false, message: err }); // Return connection error
+        res.json({ success: false, message: err });
       } else {
         if (user) {
-          res.json({ success: false, message: 'Username is already taken' }); // Return as taken username
+          res.json({ success: false, message: 'Username is already taken' });
         } else {
-          res.json({ success: true, message: 'Username is available' }); // Return as vailable username
+          res.json({ success: true, message: 'Username is available' });
         }
       }
     });
@@ -232,6 +151,7 @@ const saveUser = async (
   }
 };
 
+// PROFILE
 export const getProfile = (req: any, res: any) => {
   userModel.findOne({ _id: req.user._id }).exec((err, user) => {
     if (err) {
@@ -265,15 +185,13 @@ export const deleteAccount = (username: string, email: string, req: any, res: an
 export const getAllUsers = (res: any) => {
   return userModel
     .find({}, (err, users) => {
-      // Check if error was found or not
       if (err) {
-        return res.json({ success: false, message: err }); // Return error message
+        return res.json({ success: false, message: err });
       } else {
-        // Check if blogs were found in database
         if (!users) {
-          return res.json({ success: false, message: 'No users found.' }); // Return error of no blogs found
+          return res.json({ success: false, message: 'No users found.' });
         } else {
-          return res.json({ success: true, users }); // Return success and blogs array
+          return res.json({ success: true, users });
         }
       }
     })
@@ -283,15 +201,13 @@ export const getAllUsers = (res: any) => {
 // ALL QUERIES RELATIVES TO BLOGGGG
 export const getAllBlogs = (res: any) => {
   return BlogShema.find({}, (err, blogs) => {
-    // Check if error was found or not
     if (err) {
-      return res.json({ success: false, message: err }); // Return error message
+      return res.json({ success: false, message: err });
     } else {
-      // Check if blogs were found in database
       if (!blogs) {
-        return res.json({ success: false, message: 'No blogs found.' }); // Return error of no blogs found
+        return res.json({ success: false, message: 'No blogs found.' });
       } else {
-        return res.json({ success: true, blogs: blogs }); // Return success and blogs array
+        return res.json({ success: true, blogs: blogs });
       }
     }
   }).sort({ _id: -1 });
@@ -475,61 +391,50 @@ export const deleteBlog = (req: any, res: any) => {
 
 export const LikeABlog = (req: any, res: any) => {
   if (!req.body?.id!) {
-    res.json({ success: false, message: 'No id was provided.' }); // Return error message
+    res.json({ success: false, message: 'No id was provided.' });
   } else {
-    // Search the database with id
     BlogShema.findOne({ _id: req.body.id }, (err, blog) => {
-      // Check if error was encountered
       if (err) {
-        res.json({ success: false, message: 'Invalid blog id' }); // Return error message
+        res.json({ success: false, message: 'Invalid blog id' });
       } else {
-        // Check if id matched the id of a blog post in the database
         if (!blog) {
-          res.json({ success: false, message: 'That blog was not found.' }); // Return error message
+          res.json({ success: false, message: 'That blog was not found.' });
         } else {
-          // Get data from user that is signed in
           userModel.findOne({ _id: req.user._id }, (err, user) => {
-            // Check if error was found
             if (err) {
-              res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+              res.json({ success: false, message: 'Something went wrong.' });
             } else {
-              // Check if id of user in session was found in the database
               if (!user) {
-                res.json({ success: false, message: 'Could not authenticate user.' }); // Return error message
+                res.json({ success: false, message: 'Could not authenticate user.' });
               } else {
-                // Check if user who liked post is the same user that originally created the blog post
                 if (parseInt(user._id) === parseInt(blog.createdBy)) {
-                  res.json({ success: false, message: 'Cannot like your own post.' }); // Return error message
+                  res.json({ success: false, message: 'Cannot like your own post.' });
                 } else {
-                  // Check if the user who liked the post has already liked the blog post before
                   if (blog.likedBy.includes(user.username)) {
-                    res.json({ success: false, message: 'You already liked this post.' }); // Return error message
+                    res.json({ success: false, message: 'You already liked this post.' });
                   } else {
-                    // Check if user who liked post has previously disliked a post
                     if (blog.dislikedBy.includes(user.username)) {
-                      blog.dislikes--; // Reduce the total number of dislikes
-                      const arrayIndex = blog.dislikedBy.indexOf(user.username); // Get the index of the username in the array for removal
-                      blog.dislikedBy.splice(arrayIndex, 1); // Remove user from array
-                      blog.likes++; // Increment likes
-                      blog.likedBy.push(user.username); // Add username to the array of likedBy array
-                      // Save blog post data
+                      blog.dislikes--;
+                      const arrayIndex = blog.dislikedBy.indexOf(user.username);
+                      blog.dislikedBy.splice(arrayIndex, 1);
+                      blog.likes++;
+                      blog.likedBy.push(user.username);
+
                       blog.save(err => {
-                        // Check if error was found
                         if (err) {
-                          res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+                          res.json({ success: false, message: 'Something went wrong.' });
                         } else {
-                          res.json({ success: true, message: 'Blog liked!' }); // Return success message
+                          res.json({ success: true, message: 'Blog liked!' });
                         }
                       });
                     } else {
-                      blog.likes++; // Incriment likes
-                      blog.likedBy.push(user.username); // Add liker's username into array of likedBy
-                      // Save blog post
+                      blog.likes++;
+                      blog.likedBy.push(user.username);
                       blog.save(err => {
                         if (err) {
-                          res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+                          res.json({ success: false, message: 'Something went wrong.' });
                         } else {
-                          res.json({ success: true, message: 'Blog liked!' }); // Return success message
+                          res.json({ success: true, message: 'Blog liked!' });
                         }
                       });
                     }
@@ -546,62 +451,51 @@ export const LikeABlog = (req: any, res: any) => {
 
 export const dislikeBlog = (req: any, res: any) => {
   if (!req.body.id) {
-    res.json({ success: false, message: 'No id was provided.' }); // Return error message
+    res.json({ success: false, message: 'No id was provided.' });
   } else {
-    // Search database for blog post using the id
     BlogShema.findOne({ _id: req.body.id }, (err, blog) => {
-      // Check if error was found
       if (err) {
-        res.json({ success: false, message: 'Invalid blog id' }); // Return error message
+        res.json({ success: false, message: 'Invalid blog id' });
       } else {
-        // Check if blog post with the id was found in the database
         if (!blog) {
-          res.json({ success: false, message: 'That blog was not found.' }); // Return error message
+          res.json({ success: false, message: 'That blog was not found.' });
         } else {
-          // Get data of user who is logged in
           userModel.findOne({ _id: req.user._id }, (err, user) => {
-            // Check if error was found
             if (err) {
-              res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+              res.json({ success: false, message: 'Something went wrong.' });
             } else {
-              // Check if user was found in the database
               if (!user) {
-                res.json({ success: false, message: 'Could not authenticate user.' }); // Return error message
+                res.json({ success: false, message: 'Could not authenticate user.' });
               } else {
-                // Check if user who disliekd post is the same person who originated the blog post
                 if (parseInt(user._id) === parseInt(blog.createdBy)) {
-                  res.json({ success: false, message: 'Cannot dislike your own post.' }); // Return error message
+                  res.json({ success: false, message: 'Cannot dislike your own post.' });
                 } else {
-                  // Check if user who disliked post has already disliked it before
                   if (blog.dislikedBy.includes(user.username)) {
-                    res.json({ success: false, message: 'You already disliked this post.' }); // Return error message
+                    res.json({ success: false, message: 'You already disliked this post.' });
                   } else {
-                    // Check if user has previous disliked this post
                     if (blog.likedBy.includes(user.username)) {
-                      blog.likes--; // Decrease likes by one
-                      const arrayIndex = blog.likedBy.indexOf(user.username); // Check where username is inside of the array
-                      blog.likedBy.splice(arrayIndex, 1); // Remove username from index
-                      blog.dislikes++; // Increase dislikeds by one
-                      blog.dislikedBy.push(user.username); // Add username to list of dislikers
-                      // Save blog data
+                      blog.likes--;
+                      const arrayIndex = blog.likedBy.indexOf(user.username);
+                      blog.likedBy.splice(arrayIndex, 1);
+                      blog.dislikes++;
+                      blog.dislikedBy.push(user.username);
+
                       blog.save(err => {
-                        // Check if error was found
                         if (err) {
-                          res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+                          res.json({ success: false, message: 'Something went wrong.' });
                         } else {
-                          res.json({ success: true, message: 'Blog disliked!' }); // Return success message
+                          res.json({ success: true, message: 'Blog disliked!' });
                         }
                       });
                     } else {
-                      blog.dislikes++; // Increase likes by one
-                      blog.dislikedBy.push(user.username); // Add username to list of likers
-                      // Save blog data
+                      blog.dislikes++;
+                      blog.dislikedBy.push(user.username);
+
                       blog.save(err => {
-                        // Check if error was found
                         if (err) {
-                          res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+                          res.json({ success: false, message: 'Something went wrong.' });
                         } else {
-                          res.json({ success: true, message: 'Blog disliked!' }); // Return success message
+                          res.json({ success: true, message: 'Blog disliked!' });
                         }
                       });
                     }
@@ -618,40 +512,31 @@ export const dislikeBlog = (req: any, res: any) => {
 
 export const commentBlog = (req: any, res: any) => {
   if (!req.body.comment) {
-    res.json({ success: false, message: 'No comment provided' }); // Return error message
+    res.json({ success: false, message: 'No comment provided' });
   } else {
-    // Check if id was provided in request body
     if (!req.body.id) {
-      res.json({ success: false, message: 'No id was provided' }); // Return error message
+      res.json({ success: false, message: 'No id was provided' });
     } else {
-      // Use id to search for blog post in database
       BlogShema.findOne({ _id: req.body.id }, (err, blog) => {
-        // Check if error was found
         if (err) {
-          res.json({ success: false, message: 'Invalid blog id' }); // Return error message
+          res.json({ success: false, message: 'Invalid blog id' });
         } else {
-          // Check if id matched the id of any blog post in the database
           if (!blog) {
-            res.json({ success: false, message: 'Blog not found.' }); // Return error message
+            res.json({ success: false, message: 'Blog not found.' });
           } else {
-            // Grab data of user that is logged in
             userModel.findOne({ _id: req.user._id }, (err, user) => {
-              // Check if error was found
               if (err) {
-                res.json({ success: false, message: 'Something went wrong' }); // Return error message
+                res.json({ success: false, message: 'Something went wrong' });
               } else {
-                // Check if user was found in the database
                 if (!user) {
-                  res.json({ success: false, message: 'User not found.' }); // Return error message
+                  res.json({ success: false, message: 'User not found.' });
                 } else {
-                  // Add the new comment to the blog post's array
                   blog.comments.push({
-                    comment: req.body.comment, // Comment field
-                    commentator: user.username, // Person who commented
+                    comment: req.body.comment,
+                    commentator: user.username,
                   });
-                  // Save blog post
+
                   blog.save(err => {
-                    // Check if error was found
                     if (err) {
                       res.json({ success: false, message: 'Something went wrong.' }); // Return error message
                     } else {

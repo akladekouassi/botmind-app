@@ -3,9 +3,10 @@ import { BlogsService } from '@botmind-app/service/blogs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '@botmind-app/service/auth';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Blog, User } from 'libs/data-models';
+import { Observable } from 'rxjs';
 export interface DialogData {
   animal: 'panda' | 'unicorn' | 'lion';
 }
@@ -15,64 +16,51 @@ export interface DialogData {
   styleUrls: ['./blog.component.scss'],
 })
 export class BlogComponent implements OnInit {
-  // @ViewChild(MatAccordion) accordion: MatAccordion;
-  blogs: any[] = [];
-  message;
-  messageClass;
-  foundBlog = false;
+  blogs: Blog[];
   processing = false;
-  blog;
   currentUrl;
-  animal: string;
-  name: string;
   currentUser;
-  newPost = false;
   canDisplayCommentField: boolean = false;
   canDisplayLikers: boolean = false;
   canDisplayDislikers: boolean = false;
   loadingBlogs = false;
   form;
   commentForm;
-  username;
-  blogPosts;
   newComment = [];
   enabledComments = [];
-  users: [] = [];
+  users: User[] = [];
   activeIdx: number;
 
   constructor(
     private blogService: BlogsService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService,
-    public dialog: MatDialog // public navCtrl: NgxNavigationWithDataComponent
+    private authService: AuthService
   ) {
     this.createCommentForm();
   }
 
   // Function to post a new comment on blog post
   draftComment(id) {
-    this.commentForm.reset(); // Reset the comment form each time users starts a new comment
-    this.newComment = []; // Clear array so only one post can be commented on at a time
-    this.newComment.push(id); // Add the post that is being commented on to the array
+    this.commentForm.reset();
+    this.newComment = [];
+    this.newComment.push(id);
   }
 
   // Function to cancel new post transaction
   cancelSubmission(id) {
-    const index = this.newComment.indexOf(id); // Check the index of the blog post in the array
-    this.newComment.splice(index, 1); // Remove the id from the array to cancel post submission
-    this.commentForm.reset(); // Reset  the form after cancellation
-    this.enableCommentForm(); // Enable the form after cancellation
-    this.processing = false; // Enable any buttons that were locked
+    const index = this.newComment.indexOf(id);
+    this.newComment.splice(index, 1);
+    this.commentForm.reset();
+    this.enableCommentForm();
+    this.processing = false;
   }
 
   reloadBlogs() {
-    this.loadingBlogs = true; // Used to lock button
-    this.loadBlogs(); // Add any new blogs to the page
+    this.loadingBlogs = true;
+    this.loadBlogs();
     setTimeout(() => {
-      this.loadingBlogs = false; // Release button lock after four seconds
+      this.loadingBlogs = false;
     }, 4000);
   }
   canComment(i) {
@@ -97,23 +85,23 @@ export class BlogComponent implements OnInit {
   }
 
   // Create form for posting comments
-  createCommentForm() {
+  createCommentForm(): void {
     this.commentForm = this.formBuilder.group({
       comment: ['', Validators.compose([Validators.required, Validators.minLength(1), Validators.maxLength(200)])],
     });
   }
 
   // Enable the comment form
-  enableCommentForm() {
-    this.commentForm.get('comment').enable(); // Enable comment field
+  enableCommentForm(): void {
+    this.commentForm.get('comment').enable();
   }
 
   // Disable the comment form
-  disableCommentForm() {
-    this.commentForm.get('comment').disable(); // Disable comment field
+  disableCommentForm(): void {
+    this.commentForm.get('comment').disable();
   }
 
-  getBlogAutor(id: string) {
+  getBlogAutor(id: string): string | string[] {
     if (id === this.currentUser._id) {
       return 'Moi';
     } else {
@@ -132,7 +120,6 @@ export class BlogComponent implements OnInit {
       response => {
         if (response.success) {
           this.blogs = response.blogs;
-          console.log('THE BLOGSSSS::', response.blogs);
         }
       },
       error => {}
@@ -140,22 +127,23 @@ export class BlogComponent implements OnInit {
   }
 
   deleteBlog(blogID: string) {
-    this.processing = true;
-    this.blogService.deleteBlog(blogID).subscribe(data => {
-      if (!data.success) {
-        this.toastr.error(data.message, 'SUCCESS');
-      } else {
-        this.loadBlogs();
-        this.toastr.success(data.message, 'SUCCESS');
-      }
-    });
+    if (window.confirm('Voulez vous vraiment supprimer cet blog?')) {
+      this.processing = true;
+      this.blogService.deleteBlog(blogID).subscribe(data => {
+        if (!data.success) {
+          this.toastr.error(data.message, 'SUCCESS');
+        } else {
+          this.loadBlogs();
+          this.toastr.success(data.message, 'SUCCESS');
+        }
+      });
+    }
   }
 
   // Function to like a blog post
   likeBlog(id) {
     this.blogService.likeBlog(id).subscribe(data => {
       if (!data.success) {
-        console.log('likeeee', data);
         this.toastr.error(data.message, 'ERROR');
       } else {
         this.loadBlogs();
@@ -177,17 +165,6 @@ export class BlogComponent implements OnInit {
     });
   }
 
-  // Expand the list of comments
-  expand(id) {
-    this.enabledComments.push(id); // Add the current blog post id to array
-  }
-
-  // Collapse the list of comments
-  collapse(id) {
-    const index = this.enabledComments.indexOf(id); // Get position of id in array
-    this.enabledComments.splice(index, 1); // Remove id from array
-  }
-
   // Function to post a new comment
   postComment(id: string) {
     this.disableCommentForm();
@@ -202,7 +179,6 @@ export class BlogComponent implements OnInit {
         this.enableCommentForm();
         this.commentForm.reset();
         this.processing = false;
-        if (this.enabledComments.indexOf(id) < 0) this.expand(id); // Expand comments for user on comment submission
       } else {
         this.toastr.error(data.message, 'ERROR');
       }

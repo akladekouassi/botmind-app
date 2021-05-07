@@ -10,12 +10,10 @@
           </button>
                     <mat-menu #menu="matMenu">
                         <button [routerLink]="['/edit-blog/', blog._id]" *ngIf="currentUser?._id === blog.createdBy" mat-menu-item>
-              <mat-icon>dialpad</mat-icon>
               <span>Modifier</span>
             </button>
 
                         <button (click)="deleteBlog(blog._id)" *ngIf="currentUser._id === blog.createdBy" mat-menu-item>
-              <mat-icon>notifications_off</mat-icon>
               <span>Supprimer</span>
             </button>
                     </mat-menu>
@@ -98,4 +96,8 @@
         </mat-card>
     </div>
     <!--  -->
+</div>
+
+<div *ngIf="blogs.length === 0" class="container">
+    <h1>AUCUN ARTICLE PUBLIÉ</h1>
 </div>

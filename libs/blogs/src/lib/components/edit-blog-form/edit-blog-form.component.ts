@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlogsService } from '@botmind-app/service/blogs';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from '@botmind-app/service/auth';
+import { Blog } from 'libs/data-models/blogModels';
 
 @Component({
   selector: 'botmind-app-edit-blog-form',
@@ -12,12 +12,10 @@ import { AuthService } from '@botmind-app/service/auth';
   styleUrls: ['./edit-blog-form.component.scss'],
 })
 export class EditBlogFormComponent implements OnInit {
-  message;
-  messageClass;
-  blog;
+  blog: Blog;
   processing = false;
   currentUrl;
-  loading = true;
+  loading: boolean = true;
   form: FormGroup;
 
   constructor(
@@ -26,25 +24,14 @@ export class EditBlogFormComponent implements OnInit {
     private blogService: BlogsService,
     public router: Router,
     private toastr: ToastrService,
-    private formBuilder: FormBuilder,
-    private authService: AuthService
+    private formBuilder: FormBuilder
   ) {
     this.createNewBlogForm();
   }
 
   createNewBlogForm() {
     this.form = this.formBuilder.group({
-      // Title field
-      title: [
-        '',
-        Validators.compose([
-          Validators.required,
-          Validators.maxLength(80),
-          Validators.minLength(5),
-          this.alphaNumericValidation,
-        ]),
-      ],
-      // Body field
+      title: ['', Validators.compose([Validators.required, Validators.maxLength(80), Validators.minLength(5)])],
       body: ['', Validators.compose([Validators.required, Validators.maxLength(500), Validators.minLength(5)])],
     });
   }
@@ -60,28 +47,18 @@ export class EditBlogFormComponent implements OnInit {
     this.form.get('body').disable();
   }
 
-  // Validation for title
-  alphaNumericValidation(controls) {
-    const regExp = new RegExp(/^[a-zA-Z0-9 ]+$/);
-    if (regExp.test(controls.value)) {
-      return null;
-    } else {
-      return { alphaNumericValidation: true };
-    }
-  }
-
   // Function to Submit Update
   updateBlogSubmit() {
     const blog = {
-      title: this.form.get('title').value, // Title field
-      body: this.form.get('body').value, // Body field
+      title: this.form.get('title').value,
+      body: this.form.get('body').value,
       _id: this.currentUrl.id,
     };
     this.processing = true;
     this.blogService.editBlog(blog).subscribe(data => {
       if (!data.success) {
         this.toastr.error(data.message, 'error');
-        this.processing = false; // Unlock form fields
+        this.processing = false;
       } else {
         this.toastr.success(data.message, 'error');
         setTimeout(() => {
@@ -103,7 +80,6 @@ export class EditBlogFormComponent implements OnInit {
       } else {
         this.form.get('title').setValue(data.blog.title);
         this.form.get('body').setValue(data.blog.body);
-        this.blog = data.blogs;
         this.loading = false;
       }
     });

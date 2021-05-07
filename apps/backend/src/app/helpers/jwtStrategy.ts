@@ -5,7 +5,6 @@ const fs = require('fs');
 const path = require('path');
 
 const pathToKey = path.join(__dirname, '../../..', 'id_rsa_priv.pem');
-console.log('THE FILLEEE:', pathToKey);
 const PRIV_KEY = fs.readFileSync(pathToKey, 'utf8');
 
 /**

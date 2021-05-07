@@ -11,8 +11,8 @@
         Accueil
       </button>
 
-            <button *ngIf="authService?.isLoggedIn()" mat-button class="mat-select-arrow-wrapper" ejs-dropdownbutton [matMenuTriggerFor]="menu">
-        {{ this.user?.firstName }} {{ this.user?.lastName }}
+            <button *ngIf="authService?.isLoggedIn()" mat-button class="mat-select-arrow-wrapper" [matMenuTriggerFor]="menu">
+        {{ this.user?.firstName }} {{ this.user?.lastName }} <mat-icon>filter_list</mat-icon>
       </button>
             <mat-menu #menu="matMenu">
                 <button routerLink="/blogs/add" mat-menu-item>Ajouter un blog</button>

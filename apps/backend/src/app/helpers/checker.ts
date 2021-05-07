@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 export const ensureAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-  console.log('CHECK IF AUTHENTICATED', req.isAuthenticated());
   if (req.isAuthenticated()) {
     return next();
   }

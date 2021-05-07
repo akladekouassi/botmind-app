@@ -13,10 +13,7 @@
                   (form.controls.title.dirty && form.controls.title.errors?.minlength) ||
                   (form.controls.title.dirty && form.controls.title.errors?.maxlength)
                 ">
-                                Max length: 50, Min length: 5
-                            </li>
-                            <li *ngIf="form.controls.title.dirty && form.controls.title.errors?.alphaNumericValidation">
-                                Must be a letter or number
+                                Caractères Max: 50, Caractères Min: 5
                             </li>
                         </ul>
                     </mat-error>
@@ -38,19 +35,15 @@
                         </ul>
                     </mat-error>
                 </mat-form-field>
-                <!-- Validation -->
-                <!-- <button mat-raised-button type="submit" class="btn btn-primary">Valider</button> -->
                 <div>
                     <button mat-raised-button [disabled]="processing" type="button" name="button" (click)="goBack()" class="btn btn-warning">
             Annuler
           </button>
-                    <!-- Submit Button -->
                     <button mat-raised-button (submit)="onBlogSubmit()" [disabled]="processing || !form.valid" type="submit" name="button" class="btn btn-success">
             Valider
           </button>
                 </div>
             </form>
-            <!-- Go Back Button -->
         </mat-card-content>
     </mat-card>
 </div>
