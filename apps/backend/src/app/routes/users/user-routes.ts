@@ -1,5 +1,4 @@
 import * as express from 'express';
-import { isEqual, pick } from 'lodash/fp';
 const passport = require('passport');
 import {
   createUser,
