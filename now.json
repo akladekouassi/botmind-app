@@ -1,0 +1,14 @@
+{
+    "version": 2,
+    "name": "myapp",
+    "builds": [
+        { "src": "/dist/apps/frontend/*", "use": "@now/static" }
+    ],
+    "routes": [
+        { "src": "/api/(.*)", "dest": "https://botmind-back.herokuapp.com" },
+        { "handle": "filesystem" },
+        { "src": "/assets/(.*)", "dest": "/dist/apps/frontend/assets/$1" },
+        { "src": "/(.*).(js|css|ico)", "dest": "/dist/apps/frontend/$1.$2" },
+        { "src": "/(.*)", "dest": "/dist/apps/frontend/index.html" }
+    ]
+}
