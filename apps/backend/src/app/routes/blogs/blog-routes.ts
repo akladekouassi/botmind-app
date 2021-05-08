@@ -11,14 +11,13 @@ import {
   commentBlog,
   dislikeBlog,
 } from 'libs/database-logics/src/index';
-import { userModel } from 'apps/backend/src/app/routes/users/user-models';
 
 const router = express.Router();
 
 /* ===============================================================
      ADD NEW BLOG POST
   =============================================================== */
-router.post('/addNewBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/blog/addNewBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
   const blogFromQuery: any = req.body;
   const blog = createNewBlog(blogFromQuery, res);
   return blog;
@@ -27,7 +26,7 @@ router.post('/addNewBlog', passport.authenticate('jwt', { session: false }), (re
 /* ===============================================================
      GET ALL BLOGS 
   =============================================================== */
-router.get('/allBlogs', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/blog/allBlogs', passport.authenticate('jwt', { session: false }), (req, res) => {
   const blogs = getAllBlogs(res);
   return blogs;
 });
@@ -35,7 +34,7 @@ router.get('/allBlogs', passport.authenticate('jwt', { session: false }), (req, 
 /* ===============================================================
      GET BLOG BY USER ID
   =============================================================== */
-router.get('/singleBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/blog/singleBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const blog = getBlogByID(req.params.id, req, res);
   return blog;
 });
@@ -43,7 +42,7 @@ router.get('/singleBlog/:id', passport.authenticate('jwt', { session: false }), 
 /* ===============================================================
      GET ALL BLOG FOR USER AUTHENTICATED
   =============================================================== */
-router.get('/blogs/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/blog/blogs/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const blogs = getBlogsForSpecificUser(req.params.id, res);
   return blogs;
 });
@@ -51,7 +50,7 @@ router.get('/blogs/:id', passport.authenticate('jwt', { session: false }), (req,
 /* ===============================================================
      UPDATE BLOG
   =============================================================== */
-router.put('/updateBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/blog/updateBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
   const result = updateBlog(req.body, req, res);
   return result;
 });
@@ -59,7 +58,7 @@ router.put('/updateBlog', passport.authenticate('jwt', { session: false }), (req
 /* ===============================================================
      DELETE BLOG
   =============================================================== */
-router.delete('/deleteBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.delete('/blog/deleteBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
   const result = deleteBlog(req, res);
   return result;
 });
@@ -67,7 +66,7 @@ router.delete('/deleteBlog/:id', passport.authenticate('jwt', { session: false }
 /* ===============================================================
      LIKE BLOG
   =============================================================== */
-router.put('/like', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/blog/like', passport.authenticate('jwt', { session: false }), (req, res) => {
   const result = LikeABlog(req, res);
   return result;
 });
@@ -75,7 +74,7 @@ router.put('/like', passport.authenticate('jwt', { session: false }), (req, res)
 /* ===============================================================
      DISLIKE BLOG
   =============================================================== */
-router.put('/dislike', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/blog/dislike', passport.authenticate('jwt', { session: false }), (req, res) => {
   const result = dislikeBlog(req, res);
   return result;
 });
@@ -83,7 +82,7 @@ router.put('/dislike', passport.authenticate('jwt', { session: false }), (req, r
 /* ===============================================================
      COMMENT ON BLOG POST
   =============================================================== */
-router.post('/comment', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/blog/comment', passport.authenticate('jwt', { session: false }), (req, res) => {
   const result = commentBlog(req, res);
   return result;
 });

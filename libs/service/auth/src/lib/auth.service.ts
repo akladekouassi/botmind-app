@@ -40,7 +40,7 @@ export class AuthService {
   }
   // Function to register user accounts
   deleteAccount(username: any, email: string): Observable<any> {
-    return this.httpClient.post(environment.LOCAL_API_URL + '/users/deleteAccount', { username, email }, { headers });
+    return this.httpClient.post(environment.DELETE_USER_ACCOUNT_API_URL, { username, email }, { headers });
   }
 
   // Function to check if username is taken
@@ -55,7 +55,7 @@ export class AuthService {
 
   // Function to login user
   login(username: string, password: string): Observable<any> {
-    return this.http.post('http://localhost:5000/login', { username, password }).pipe(map(res => res.json()));
+    return this.http.post(environment.LOGIN_API_URL, { username, password }).pipe(map(res => res.json()));
   }
 
   // Function to logout
@@ -65,7 +65,7 @@ export class AuthService {
   }
 
   getAllUsers(): Observable<any> {
-    return this.httpClient.get<User[]>(environment.LOCAL_API_URL + '/users/getAllUsers', { headers });
+    return this.httpClient.get<User[]>(environment.GET_ALL_USERS_API_URL, { headers });
   }
 
   // Function to store user's data in client local storage

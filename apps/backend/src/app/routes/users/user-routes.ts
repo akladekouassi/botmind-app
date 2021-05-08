@@ -16,23 +16,23 @@ import { ensureAuthenticated, validateMiddleware, userFieldsValidator, isUserVal
 const router = express.Router();
 
 // Routes
-router.post('/register', userFieldsValidator, validateMiddleware(isUserValidator), (req, res) => {
+router.post('/users/register', userFieldsValidator, validateMiddleware(isUserValidator), (req, res) => {
   const userDetails: User = req.body;
   const user = createUser(userDetails, res, req);
   return user;
 });
 
-router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/users/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
   const user = getProfile(req, res);
   return user;
 });
 
-router.get('/getAllUsers', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/users/getAllUsers', passport.authenticate('jwt', { session: false }), (req, res) => {
   const users = getAllUsers(res);
   return users;
 });
 
-router.post('/deleteAccount', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/users/deleteAccount', passport.authenticate('jwt', { session: false }), (req, res) => {
   const { username, email } = req.body;
   const response = deleteAccount(username, email, req, res);
   return response;
@@ -41,7 +41,7 @@ router.post('/deleteAccount', passport.authenticate('jwt', { session: false }), 
 /* ============================================================
      Route to check if user's email is available for registration
   ============================================================ */
-router.get('/checkEmail/:email', (req, res) => {
+router.get('/users/checkEmail/:email', (req, res) => {
   const user = checkEmail(req.params.email, res);
   return user;
 });
@@ -49,13 +49,13 @@ router.get('/checkEmail/:email', (req, res) => {
 /* ===============================================================
      Route to check if user's username is available for registration
   =============================================================== */
-router.get('/checkUsername/:username', (req, res) => {
+router.get('/users/checkUsername/:username', (req, res) => {
   const user = checkUsername(req.params.username, res);
   return user;
 });
 
 router.post(
-  '/updateProfile/:id',
+  '/users/updateProfile/:id',
   passport.authenticate('jwt', { session: false }),
   userFieldsValidator,
   validateMiddleware(isUserValidator),

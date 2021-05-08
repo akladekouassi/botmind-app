@@ -537,7 +537,7 @@ const router = express.Router();
 /* ===============================================================
      ADD NEW BLOG POST
   =============================================================== */
-router.post('/addNewBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/blog/addNewBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
     const blogFromQuery = req.body;
     const blog = index_1.createNewBlog(blogFromQuery, res);
     return blog;
@@ -545,56 +545,56 @@ router.post('/addNewBlog', passport.authenticate('jwt', { session: false }), (re
 /* ===============================================================
      GET ALL BLOGS
   =============================================================== */
-router.get('/allBlogs', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/blog/allBlogs', passport.authenticate('jwt', { session: false }), (req, res) => {
     const blogs = index_1.getAllBlogs(res);
     return blogs;
 });
 /* ===============================================================
      GET BLOG BY USER ID
   =============================================================== */
-router.get('/singleBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/blog/singleBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     const blog = index_1.getBlogByID(req.params.id, req, res);
     return blog;
 });
 /* ===============================================================
      GET ALL BLOG FOR USER AUTHENTICATED
   =============================================================== */
-router.get('/blogs/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/blog/blogs/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     const blogs = index_1.getBlogsForSpecificUser(req.params.id, res);
     return blogs;
 });
 /* ===============================================================
      UPDATE BLOG
   =============================================================== */
-router.put('/updateBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/blog/updateBlog', passport.authenticate('jwt', { session: false }), (req, res) => {
     const result = index_1.updateBlog(req.body, req, res);
     return result;
 });
 /* ===============================================================
      DELETE BLOG
   =============================================================== */
-router.delete('/deleteBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.delete('/blog/deleteBlog/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     const result = index_1.deleteBlog(req, res);
     return result;
 });
 /* ===============================================================
      LIKE BLOG
   =============================================================== */
-router.put('/like', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/blog/like', passport.authenticate('jwt', { session: false }), (req, res) => {
     const result = index_1.LikeABlog(req, res);
     return result;
 });
 /* ===============================================================
      DISLIKE BLOG
   =============================================================== */
-router.put('/dislike', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/blog/dislike', passport.authenticate('jwt', { session: false }), (req, res) => {
     const result = index_1.dislikeBlog(req, res);
     return result;
 });
 /* ===============================================================
      COMMENT ON BLOG POST
   =============================================================== */
-router.post('/comment', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/blog/comment', passport.authenticate('jwt', { session: false }), (req, res) => {
     const result = index_1.commentBlog(req, res);
     return result;
 });
@@ -692,20 +692,20 @@ const index_1 = __webpack_require__(/*! ../../../../../../libs/database-logics/s
 const index_2 = __webpack_require__(/*! ../../helpers/index */ "./apps/backend/src/app/helpers/index.ts");
 const router = express.Router();
 // Routes
-router.post('/register', index_2.userFieldsValidator, index_2.validateMiddleware(index_2.isUserValidator), (req, res) => {
+router.post('/users/register', index_2.userFieldsValidator, index_2.validateMiddleware(index_2.isUserValidator), (req, res) => {
     const userDetails = req.body;
     const user = index_1.createUser(userDetails, res, req);
     return user;
 });
-router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/users/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
     const user = index_1.getProfile(req, res);
     return user;
 });
-router.get('/getAllUsers', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/users/getAllUsers', passport.authenticate('jwt', { session: false }), (req, res) => {
     const users = index_1.getAllUsers(res);
     return users;
 });
-router.post('/deleteAccount', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/users/deleteAccount', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { username, email } = req.body;
     const response = index_1.deleteAccount(username, email, req, res);
     return response;
@@ -713,18 +713,18 @@ router.post('/deleteAccount', passport.authenticate('jwt', { session: false }), 
 /* ============================================================
      Route to check if user's email is available for registration
   ============================================================ */
-router.get('/checkEmail/:email', (req, res) => {
+router.get('/users/checkEmail/:email', (req, res) => {
     const user = index_1.checkEmail(req.params.email, res);
     return user;
 });
 /* ===============================================================
      Route to check if user's username is available for registration
   =============================================================== */
-router.get('/checkUsername/:username', (req, res) => {
+router.get('/users/checkUsername/:username', (req, res) => {
     const user = index_1.checkUsername(req.params.username, res);
     return user;
 });
-router.post('/updateProfile/:id', passport.authenticate('jwt', { session: false }), index_2.userFieldsValidator, index_2.validateMiddleware(index_2.isUserValidator), (req, res) => {
+router.post('/users/updateProfile/:id', passport.authenticate('jwt', { session: false }), index_2.userFieldsValidator, index_2.validateMiddleware(index_2.isUserValidator), (req, res) => {
     const userDetails = req.body;
     const userUpdated = index_1.updateUserProfile(userDetails, res, req, req.params.id);
     return userUpdated;
@@ -752,9 +752,9 @@ const cors = __webpack_require__(/*! cors */ "cors");
 const user_routes_1 = __webpack_require__(/*! ./app/routes/users/user-routes */ "./apps/backend/src/app/routes/users/user-routes.ts");
 const auth_1 = __webpack_require__(/*! ./app/routes/auth/auth */ "./apps/backend/src/app/routes/auth/auth.ts");
 const blog_routes_1 = __webpack_require__(/*! ./app/routes/blogs/blog-routes */ "./apps/backend/src/app/routes/blogs/blog-routes.ts");
-const CLIENT_BUILD_PATH = path.join(__dirname, '../frontend');
+const CLIENT_BUILD_PATH = path.join(__dirname, '../../../dist/apps/frontend');
 const app = express();
-app.use(express.static(CLIENT_BUILD_PATH));
+const apiRoute = '/api';
 __webpack_require__(/*! dotenv */ "dotenv").config();
 __webpack_require__(/*! ../src/app/helpers/dbConnexion */ "./apps/backend/src/app/helpers/dbConnexion.ts");
 const corsOption = {
@@ -768,18 +768,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 __webpack_require__(/*! ../../backend/src/app/helpers/passport */ "./apps/backend/src/app/helpers/passport.ts")(passport);
 app.use(passport.initialize());
-app.get('/api', (req, res) => {
-    res.send({ message: 'THIS APPS WORK WELLE' });
+app.use(express.static(CLIENT_BUILD_PATH));
+app.get(apiRoute, (req, res) => {
+    res.send({ message: 'THIS APPS WORK WELL' });
 });
-app.use(auth_1.default);
-app.use('/users', user_routes_1.default);
-app.use('/blog', blog_routes_1.default);
+app.use(apiRoute, auth_1.default);
+app.use(apiRoute, user_routes_1.default);
+app.use(apiRoute, blog_routes_1.default);
 app.get('*', (request, response) => {
-    response.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
+    response.sendFile(path.resolve(__dirname, '../../../dist/apps/frontend', 'index.html'));
 });
 const port = process.env.PORT || 3001;
 const server = app.listen(port, () => {
-    console.log(`Listening at ${port}`);
+    console.log(`Listening at http://localhost:${port}${apiRoute}`);
 });
 server.on('error', console.error);
 
